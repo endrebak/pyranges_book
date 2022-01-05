@@ -8,4 +8,4 @@ use_python("/mnt/work/endrebak/software/anaconda/bin/python")
 
 library(bookdown)
 
-render_book("bookdown::gitbook")
+render_book("index.Rmd", "bookdown::gitbook")

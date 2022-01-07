@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>9 Iterating over PyRanges | PyRanges documentation</title>
-  <meta name="description" content="9 Iterating over PyRanges | PyRanges documentation" />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <title>9 Iterating over PyRanges | Subsetting PyRanges</title>
+  <meta name="description" content="9 Iterating over PyRanges | Subsetting PyRanges" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="9 Iterating over PyRanges | PyRanges documentation" />
+  <meta property="og:title" content="9 Iterating over PyRanges | Subsetting PyRanges" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="9 Iterating over PyRanges | PyRanges documentation" />
+  <meta name="twitter:title" content="9 Iterating over PyRanges | Subsetting PyRanges" />
   
   
   
@@ -24,22 +24,25 @@
 <meta name="author" content="Endre Bakken Stovner" />
 
 
-<meta name="date" content="2020-02-12" />
+<meta name="date" content="2022-01-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="printing-pyranges.html">
-<link rel="next" href="sorting-pyranges.html">
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="prev" href="printing-pyranges.html"/>
+<link rel="next" href="sorting-pyranges.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,28 +50,32 @@
 
 
 
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +84,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -111,6 +118,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 </head>
 
@@ -165,7 +173,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">PyRanges documentation</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Subsetting PyRanges</a>
           </h1>
         </div>
 
@@ -173,20 +181,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="iterating-over-pyranges" class="section level1">
+<div id="iterating-over-pyranges" class="section level1" number="9">
 <h1><span class="header-section-number">9</span> Iterating over PyRanges</h1>
 <p>PyRanges can be iterated over by a simple for loop, and the data is guaranteed
 to come back in natsorted order:</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb105-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb105-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb105-3" data-line-number="3"><span class="im">import</span> pandas <span class="im">as</span> pd</a>
-<a class="sourceLine" id="cb105-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb105-5" data-line-number="5">exons <span class="op">=</span> pr.data.exons()</a>
-<a class="sourceLine" id="cb105-6" data-line-number="6">cpg <span class="op">=</span> pr.data.cpg()</a>
-<a class="sourceLine" id="cb105-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb105-8" data-line-number="8"><span class="cf">for</span> k, df <span class="kw">in</span> cpg:</a>
-<a class="sourceLine" id="cb105-9" data-line-number="9">    <span class="bu">print</span>(k)</a>
-<a class="sourceLine" id="cb105-10" data-line-number="10">    <span class="bu">print</span>(df.head(<span class="dv">3</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb102-1"><a href="iterating-over-pyranges.html#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb102-2"><a href="iterating-over-pyranges.html#cb102-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-3"><a href="iterating-over-pyranges.html#cb102-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb102-4"><a href="iterating-over-pyranges.html#cb102-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-5"><a href="iterating-over-pyranges.html#cb102-5" aria-hidden="true" tabindex="-1"></a>exons <span class="op">=</span> pr.data.exons()</span>
+<span id="cb102-6"><a href="iterating-over-pyranges.html#cb102-6" aria-hidden="true" tabindex="-1"></a>cpg <span class="op">=</span> pr.data.cpg()</span>
+<span id="cb102-7"><a href="iterating-over-pyranges.html#cb102-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-8"><a href="iterating-over-pyranges.html#cb102-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, df <span class="kw">in</span> cpg:</span>
+<span id="cb102-9"><a href="iterating-over-pyranges.html#cb102-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(k)</span>
+<span id="cb102-10"><a href="iterating-over-pyranges.html#cb102-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(df.head(<span class="dv">3</span>))</span></code></pre></div>
 <pre><code>## chrX
 ##   Chromosome   Start     End  CpG
 ## 0       chrX   64181   64793   62
@@ -199,9 +207,9 @@ to come back in natsorted order:</p>
 ## 898       chrY  98685  99461   85</code></pre>
 <p>If the data is unstranded, the key is just the chromosome names, but if the data
 is stranded the key is a tuple of the chromosome and strand:</p>
-<div class="sourceCode" id="cb107"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb107-1" data-line-number="1"><span class="cf">for</span> k, df <span class="kw">in</span> exons:</a>
-<a class="sourceLine" id="cb107-2" data-line-number="2">    <span class="bu">print</span>(k)</a>
-<a class="sourceLine" id="cb107-3" data-line-number="3">    <span class="bu">print</span>(df.head(<span class="dv">3</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb104-1"><a href="iterating-over-pyranges.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, df <span class="kw">in</span> exons:</span>
+<span id="cb104-2"><a href="iterating-over-pyranges.html#cb104-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(k)</span>
+<span id="cb104-3"><a href="iterating-over-pyranges.html#cb104-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(df.head(<span class="dv">3</span>))</span></code></pre></div>
 <pre><code>## (&#39;chrX&#39;, &#39;+&#39;)
 ##   Chromosome      Start        End                                 Name  Score Strand
 ## 0       chrX  135721701  135721963  NR_038462_exon_0_0_chrX_135721702_f      0      +
@@ -223,10 +231,10 @@ is stranded the key is a tuple of the chromosome and strand:</p>
 ## 8       chrY  15526614  15526673  NR_047607_exon_25_0_chrY_15526615_r      0      -
 ## 9       chrY  15591393  15592550  NR_047610_exon_27_0_chrY_15591394_r      0      -</code></pre>
 <p>If you would like to iterate over the chromosomes in a stranded PyRange the idiom is</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb109-1" data-line-number="1"><span class="cf">for</span> c <span class="kw">in</span> exons.chromosomes:</a>
-<a class="sourceLine" id="cb109-2" data-line-number="2">    <span class="bu">print</span>(c)</a>
-<a class="sourceLine" id="cb109-3" data-line-number="3">    df <span class="op">=</span> exons[c].df</a>
-<a class="sourceLine" id="cb109-4" data-line-number="4">    <span class="bu">print</span>(df.head())</a></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb106-1"><a href="iterating-over-pyranges.html#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> exons.chromosomes:</span>
+<span id="cb106-2"><a href="iterating-over-pyranges.html#cb106-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(c)</span>
+<span id="cb106-3"><a href="iterating-over-pyranges.html#cb106-3" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> exons[c].df</span>
+<span id="cb106-4"><a href="iterating-over-pyranges.html#cb106-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(df.head())</span></code></pre></div>
 <pre><code>## chrX
 ##   Chromosome      Start        End                                   Name  Score Strand
 ## 0       chrX  135721701  135721963    NR_038462_exon_0_0_chrX_135721702_f      0      +
@@ -246,16 +254,16 @@ returns a PyRange.</p>
 <p>There are three more ways to iterate over a pyrange, namely the keys, values and
 items methods. These return a list, not a custom object like the python dict.</p>
 <p>If you want to create a new PyRange while iterating over it, the idiom is</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb111-1" data-line-number="1">d <span class="op">=</span> {}</a>
-<a class="sourceLine" id="cb111-2" data-line-number="2"><span class="cf">for</span> k, df <span class="kw">in</span> exons:</a>
-<a class="sourceLine" id="cb111-3" data-line-number="3">    <span class="bu">print</span>(k)</a>
-<a class="sourceLine" id="cb111-4" data-line-number="4">    d[k] <span class="op">=</span> df.head(<span class="dv">3</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb108-1"><a href="iterating-over-pyranges.html#cb108-1" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> {}</span>
+<span id="cb108-2"><a href="iterating-over-pyranges.html#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, df <span class="kw">in</span> exons:</span>
+<span id="cb108-3"><a href="iterating-over-pyranges.html#cb108-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(k)</span>
+<span id="cb108-4"><a href="iterating-over-pyranges.html#cb108-4" aria-hidden="true" tabindex="-1"></a>    d[k] <span class="op">=</span> df.head(<span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## (&#39;chrX&#39;, &#39;+&#39;)
 ## (&#39;chrX&#39;, &#39;-&#39;)
 ## (&#39;chrY&#39;, &#39;+&#39;)
 ## (&#39;chrY&#39;, &#39;-&#39;)</code></pre>
-<div class="sourceCode" id="cb113"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb113-1" data-line-number="1">new_gr <span class="op">=</span> pr.PyRanges(d)</a>
-<a class="sourceLine" id="cb113-2" data-line-number="2"><span class="bu">print</span>(new_gr)</a></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb110-1"><a href="iterating-over-pyranges.html#cb110-1" aria-hidden="true" tabindex="-1"></a>new_gr <span class="op">=</span> pr.PyRanges(d)</span>
+<span id="cb110-2"><a href="iterating-over-pyranges.html#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(new_gr)</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+----------------------------------------+-----------+--------------+
 ## | Chromosome   | Start     | End       | Name                                   | Score     | Strand       |
 ## | (category)   | (int32)   | (int32)   | (object)                               | (int64)   | (category)   |
@@ -274,278 +282,260 @@ items methods. These return a list, not a custom object like the python dict.</p
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p>Note that this is basically the same as using the apply method of the PyRange,
 only that the for loops are never multithreaded.</p>
-<p>To iterate over multiple pyranges you can use pr.itergrs or pr.iter. It iterates
+<p>To iterate over multiple pyranges you can use pr.itergrs. It iterates
 over multiple pyranges at the same time, returning the dfs belonging to the same
 Chromosome or Chromosome/Strand at each iteration. Missing entries in one or
 more PyRanges returns empty dfs.</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb115-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb115-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb115-3" data-line-number="3">l <span class="op">=</span> pr.random(<span class="dv">25</span>), pr.random(<span class="dv">25</span>), pr.random(<span class="dv">25</span>)</a>
-<a class="sourceLine" id="cb115-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb115-5" data-line-number="5"><span class="cf">for</span> key, grs <span class="kw">in</span> pr.<span class="bu">iter</span>(l, keys<span class="op">=</span><span class="va">True</span>, strand<span class="op">=</span><span class="va">True</span>):</a>
-<a class="sourceLine" id="cb115-6" data-line-number="6">    <span class="bu">print</span>(key)</a>
-<a class="sourceLine" id="cb115-7" data-line-number="7">    <span class="bu">print</span>(grs)</a></code></pre></div>
-<pre><code>## (&#39;chr20&#39;, &#39;-&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome    Start      End Strand
-## 0      chr20  8138908  8139008      -,   Chromosome     Start       End Strand
-## 1      chr20  28194163  28194263      -]
-## (&#39;chr14&#39;, &#39;+&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 0      chr14  26953180  26953280      +,   Chromosome     Start       End Strand
-## 0      chr14  96401150  96401250      +
-## 1      chr14  96413256  96413356      +]
-## (&#39;chr3&#39;, &#39;-&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome      Start        End Strand
-## 0       chr3  124466989  124467089      -
-## 1       chr3   13642007   13642107      -,   Chromosome      Start        End Strand
-## 1       chr3  168306282  168306382      -]
-## (&#39;chr21&#39;, &#39;+&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 0      chr21  31292285  31292385      +, Empty DataFrame
+<div class="sourceCode" id="cb112"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb112-1"><a href="iterating-over-pyranges.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb112-2"><a href="iterating-over-pyranges.html#cb112-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-3"><a href="iterating-over-pyranges.html#cb112-3" aria-hidden="true" tabindex="-1"></a>l <span class="op">=</span> pr.random(<span class="dv">25</span>), pr.random(<span class="dv">25</span>), pr.random(<span class="dv">25</span>)</span>
+<span id="cb112-4"><a href="iterating-over-pyranges.html#cb112-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-5"><a href="iterating-over-pyranges.html#cb112-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, grs <span class="kw">in</span> pr.itergrs(l, keys<span class="op">=</span><span class="va">True</span>, strand<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb112-6"><a href="iterating-over-pyranges.html#cb112-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(key)</span>
+<span id="cb112-7"><a href="iterating-over-pyranges.html#cb112-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(grs)</span></code></pre></div>
+<pre><code>## (&#39;chr1&#39;, &#39;+&#39;)
+## [   Chromosome      Start        End Strand
+## 14       chr1  157973478  157973578      +,    Chromosome      Start        End Strand
+## 19       chr1  226844070  226844170      +, Empty DataFrame
 ## Columns: [Chromosome, Start, End, Strand]
 ## Index: []]
-## (&#39;chr2&#39;, &#39;-&#39;)
+## (&#39;chr1&#39;, &#39;-&#39;)
+## [   Chromosome     Start       End Strand
+## 13       chr1  49067879  49067979      -, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],    Chromosome      Start        End Strand
+## 9        chr1   48430387   48430487      -
+## 10       chr1  173734200  173734300      -]
+## (&#39;chr2&#39;, &#39;+&#39;)
 ## [Empty DataFrame
 ## Columns: [Chromosome, Start, End, Strand]
-## Index: [], Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
 ## Index: [],   Chromosome      Start        End Strand
-## 0       chr2  107773861  107773961      -
-## 1       chr2   54686939   54687039      -]
-## (&#39;chr7&#39;, &#39;-&#39;)
-## [  Chromosome      Start        End Strand
-## 0       chr7   17943711   17943811      -
-## 1       chr7  157652274  157652374      -
-## 2       chr7  133675538  133675638      -,   Chromosome      Start        End Strand
-## 0       chr7  149972489  149972589      -,   Chromosome     Start       End Strand
-## 0       chr7  79710047  79710147      -
-## 1       chr7   4183867   4183967      -]
-## (&#39;chr17&#39;, &#39;-&#39;)
-## [  Chromosome     Start       End Strand
-## 0      chr17  74245342  74245442      -, Empty DataFrame
+## 6       chr2  242621527  242621627      +
+## 7       chr2   65019491   65019591      +,    Chromosome     Start       End Strand
+## 14       chr2  63572484  63572584      +]
+## (&#39;chr2&#39;, &#39;-&#39;)
+## [   Chromosome      Start        End Strand
+## 20       chr2  182092085  182092185      -, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],    Chromosome      Start        End Strand
+## 15       chr2  120891825  120891925      -]
+## (&#39;chr3&#39;, &#39;+&#39;)
+## [Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],    Chromosome     Start       End Strand
+## 10       chr3  50138009  50138109      +,    Chromosome      Start        End Strand
+## 16       chr3  133002003  133002103      +
+## 18       chr3  149824174  149824274      +]
+## (&#39;chr3&#39;, &#39;-&#39;)
+## [   Chromosome     Start       End Strand
+## 17       chr3  14114740  14114840      -,    Chromosome      Start        End Strand
+## 11       chr3  134421973  134422073      -
+## 12       chr3   90585048   90585148      -,    Chromosome     Start       End Strand
+## 17       chr3   7286191   7286291      -
+## 19       chr3  93013901  93014001      -]
+## (&#39;chr4&#39;, &#39;-&#39;)
+## [Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],    Chromosome     Start       End Strand
+## 13       chr4  55107759  55107859      -,    Chromosome     Start       End Strand
+## 24       chr4  29812587  29812687      -]
+## (&#39;chr5&#39;, &#39;+&#39;)
+## [Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],   Chromosome     Start       End Strand
+## 1       chr5  32897801  32897901      +
+## 2       chr5  91199238  91199338      +,   Chromosome      Start        End Strand
+## 2       chr5   34382806   34382906      +
+## 3       chr5  118919378  118919478      +]
+## (&#39;chr5&#39;, &#39;-&#39;)
+## [   Chromosome     Start       End Strand
+## 9        chr5   5836200   5836300      -
+## 10       chr5  81809669  81809769      -, Empty DataFrame
 ## Columns: [Chromosome, Start, End, Strand]
 ## Index: [], Empty DataFrame
 ## Columns: [Chromosome, Start, End, Strand]
 ## Index: []]
 ## (&#39;chr6&#39;, &#39;+&#39;)
+## [Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [], Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],    Chromosome     Start       End Strand
+## 13       chr6  19886930  19887030      +]
+## (&#39;chr6&#39;, &#39;-&#39;)
+## [Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],    Chromosome      Start        End Strand
+## 15       chr6  118455852  118455952      -
+## 16       chr6    7693128    7693228      -,    Chromosome      Start        End Strand
+## 12       chr6  151006725  151006825      -]
+## (&#39;chr7&#39;, &#39;+&#39;)
 ## [  Chromosome      Start        End Strand
-## 0       chr6  108762618  108762718      +,   Chromosome     Start       End Strand
-## 1       chr6  18518627  18518727      +, Empty DataFrame
+## 1       chr7   97364573   97364673      +
+## 2       chr7  134463339  134463439      +
+## 4       chr7  136168107  136168207      +, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [], Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: []]
+## (&#39;chr7&#39;, &#39;-&#39;)
+## [  Chromosome     Start       End Strand
+## 3       chr7  73749735  73749835      -, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [], Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: []]
+## (&#39;chr8&#39;, &#39;+&#39;)
+## [Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [], Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],   Chromosome     Start       End Strand
+## 7       chr8  95887882  95887982      +]
+## (&#39;chr8&#39;, &#39;-&#39;)
+## [   Chromosome     Start       End Strand
+## 15       chr8  23530529  23530629      -, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],   Chromosome      Start        End Strand
+## 8       chr8  128066271  128066371      -]
+## (&#39;chr9&#39;, &#39;-&#39;)
+## [   Chromosome     Start       End Strand
+## 18       chr9  21239212  21239312      -,    Chromosome     Start       End Strand
+## 14       chr9  75411369  75411469      -, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: []]
+## (&#39;chr10&#39;, &#39;+&#39;)
+## [   Chromosome     Start       End Strand
+## 19      chr10  35039241  35039341      +, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],    Chromosome     Start       End Strand
+## 21      chr10  58679587  58679687      +
+## 22      chr10  15134506  15134606      +]
+## (&#39;chr10&#39;, &#39;-&#39;)
+## [Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],   Chromosome     Start       End Strand
+## 3      chr10  25182792  25182892      -
+## 4      chr10  29131873  29131973      -
+## 5      chr10  29570785  29570885      -,    Chromosome      Start        End Strand
+## 20      chr10   94048795   94048895      -
+## 23      chr10  123710584  123710684      -]
+## (&#39;chr11&#39;, &#39;+&#39;)
+## [   Chromosome     Start       End Strand
+## 16      chr11  54702282  54702382      +, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],    Chromosome     Start       End Strand
+## 11      chr11  65616250  65616350      +]
+## (&#39;chr12&#39;, &#39;+&#39;)
+## [Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],    Chromosome      Start        End Strand
+## 23      chr12  112265739  112265839      +, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: []]
+## (&#39;chr13&#39;, &#39;+&#39;)
+## [   Chromosome     Start       End Strand
+## 24      chr13  29436154  29436254      +, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],   Chromosome     Start       End Strand
+## 4      chr13  96072303  96072403      +
+## 5      chr13  29016421  29016521      +]
+## (&#39;chr14&#39;, &#39;+&#39;)
+## [Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],   Chromosome     Start       End Strand
+## 8      chr14  59626952  59627052      +, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: []]
+## (&#39;chr14&#39;, &#39;-&#39;)
+## [  Chromosome     Start       End Strand
+## 8      chr14  46541291  46541391      -,   Chromosome     Start       End Strand
+## 9      chr14  54398166  54398266      -, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: []]
+## (&#39;chr15&#39;, &#39;+&#39;)
+## [Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],    Chromosome     Start       End Strand
+## 24      chr15  11788322  11788422      +, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: []]
+## (&#39;chr15&#39;, &#39;-&#39;)
+## [   Chromosome     Start       End Strand
+## 22      chr15  65517490  65517590      -, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [], Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: []]
+## (&#39;chr16&#39;, &#39;-&#39;)
+## [   Chromosome     Start       End Strand
+## 11      chr16  47551968  47552068      -, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],   Chromosome     Start       End Strand
+## 0      chr16  39235650  39235750      -
+## 1      chr16   1316431   1316531      -]
+## (&#39;chr17&#39;, &#39;+&#39;)
+## [  Chromosome     Start       End Strand
+## 7      chr17  14128660  14128760      +, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [], Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: []]
+## (&#39;chr17&#39;, &#39;-&#39;)
+## [  Chromosome     Start       End Strand
+## 5      chr17   3918221   3918321      -
+## 6      chr17  71072871  71072971      -, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [], Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: []]
+## (&#39;chr18&#39;, &#39;+&#39;)
+## [   Chromosome     Start       End Strand
+## 12      chr18  74986480  74986580      +, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [], Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: []]
+## (&#39;chr19&#39;, &#39;-&#39;)
+## [Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],   Chromosome     Start       End Strand
+## 0      chr19  42479976  42480076      -, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: []]
+## (&#39;chr20&#39;, &#39;-&#39;)
+## [   Chromosome     Start       End Strand
+## 21      chr20  17969018  17969118      -,    Chromosome     Start       End Strand
+## 22      chr20  12641729  12641829      -, Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: []]
+## (&#39;chr21&#39;, &#39;+&#39;)
+## [Empty DataFrame
+## Columns: [Chromosome, Start, End, Strand]
+## Index: [],    Chromosome     Start       End Strand
+## 20      chr21  46217927  46218027      +
+## 21      chr21   6434480   6434580      +, Empty DataFrame
 ## Columns: [Chromosome, Start, End, Strand]
 ## Index: []]
 ## (&#39;chrX&#39;, &#39;+&#39;)
 ## [Empty DataFrame
 ## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome      Start        End Strand
-## 0       chrX  131298446  131298546      +, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr19&#39;, &#39;+&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 1      chr19  43209866  43209966      +, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr4&#39;, &#39;-&#39;)
-## [  Chromosome      Start        End Strand
-## 1       chr4  181566043  181566143      -, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 0       chr4  22328930  22329030      -
-## 1       chr4  15751892  15751992      -]
-## (&#39;chr12&#39;, &#39;+&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 1      chr12  29398471  29398571      +, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr17&#39;, &#39;+&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [], Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 0      chr17  59069253  59069353      +]
-## (&#39;chr10&#39;, &#39;+&#39;)
-## [  Chromosome    Start      End Strand
-## 1      chr10  7492406  7492506      +, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [], Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr9&#39;, &#39;-&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
 ## Index: [], Empty DataFrame
 ## Columns: [Chromosome, Start, End, Strand]
 ## Index: [],   Chromosome      Start        End Strand
-## 1       chr9  120171189  120171289      -
-## 3       chr9   34301318   34301418      -]
-## (&#39;chr19&#39;, &#39;-&#39;)
-## [Empty DataFrame
+## 6       chrX  114025992  114026092      +]
+## (&#39;chrX&#39;, &#39;-&#39;)
+## [   Chromosome      Start        End Strand
+## 23       chrX  105502200  105502300      -, Empty DataFrame
 ## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 0      chr19  16650294  16650394      -, Empty DataFrame
+## Index: [], Empty DataFrame
 ## Columns: [Chromosome, Start, End, Strand]
 ## Index: []]
 ## (&#39;chrY&#39;, &#39;-&#39;)
 ## [  Chromosome     Start       End Strand
-## 0       chrY  53202002  53202102      -, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [], Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr1&#39;, &#39;-&#39;)
-## [  Chromosome      Start        End Strand
-## 0       chr1  132458119  132458219      -
-## 3       chr1   28499072   28499172      -
-## 4       chr1  209314949  209315049      -
-## 6       chr1  162373989  162374089      -,   Chromosome      Start        End Strand
-## 0       chr1  212894110  212894210      -,   Chromosome      Start        End Strand
-## 1       chr1  109330899  109330999      -
-## 2       chr1  106028704  106028804      -]
-## (&#39;chr5&#39;, &#39;+&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 1       chr5  99644685  99644785      +, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr20&#39;, &#39;+&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 1      chr20  37547541  37547641      +,   Chromosome     Start       End Strand
-## 0      chr20  26351212  26351312      +]
-## (&#39;chr13&#39;, &#39;+&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [], Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome      Start        End Strand
-## 0      chr13  100866481  100866581      +]
-## (&#39;chr3&#39;, &#39;+&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 2       chr3  93527177  93527277      +,   Chromosome     Start       End Strand
-## 0       chr3  90489313  90489413      +]
-## (&#39;chr22&#39;, &#39;-&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 0      chr22  16003098  16003198      -,   Chromosome     Start       End Strand
-## 0      chr22  20543358  20543458      -]
-## (&#39;chr8&#39;, &#39;+&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 1       chr8  71433208  71433308      +, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr1&#39;, &#39;+&#39;)
-## [  Chromosome      Start        End Strand
-## 1       chr1   67273847   67273947      +
-## 2       chr1   26272408   26272508      +
-## 5       chr1  205340014  205340114      +
-## 7       chr1  123702454  123702554      +, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome      Start        End Strand
-## 0       chr1  126937764  126937864      +]
-## (&#39;chr15&#39;, &#39;+&#39;)
-## [  Chromosome     Start       End Strand
-## 0      chr15  91946763  91946863      +,   Chromosome     Start       End Strand
-## 0      chr15  91172292  91172392      +,   Chromosome     Start       End Strand
-## 0      chr15  19281885  19281985      +]
-## (&#39;chr5&#39;, &#39;-&#39;)
-## [  Chromosome     Start       End Strand
-## 0       chr5  88501433  88501533      -,   Chromosome     Start       End Strand
-## 0       chr5  29481603  29481703      -, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr16&#39;, &#39;+&#39;)
-## [  Chromosome     Start       End Strand
-## 0      chr16  48448301  48448401      +, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [], Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chrX&#39;, &#39;-&#39;)
-## [  Chromosome     Start       End Strand
-## 0       chrX  88907424  88907524      -, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [], Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr4&#39;, &#39;+&#39;)
-## [  Chromosome     Start       End Strand
-## 0       chr4  12754845  12754945      +, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [], Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr12&#39;, &#39;-&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 0      chr12  10029261  10029361      -, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr7&#39;, &#39;+&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 1       chr7  10239606  10239706      +, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr10&#39;, &#39;-&#39;)
-## [  Chromosome      Start        End Strand
-## 0      chr10  132015880  132015980      -, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 0      chr10  54151437  54151537      -]
-## (&#39;chr18&#39;, &#39;-&#39;)
-## [  Chromosome     Start       End Strand
-## 0      chr18  77921690  77921790      -, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [], Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr9&#39;, &#39;+&#39;)
-## [  Chromosome     Start       End Strand
-## 0       chr9  12199321  12199421      +, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome      Start        End Strand
-## 0       chr9  113342950  113343050      +
-## 2       chr9   74764944   74765044      +]
-## (&#39;chr8&#39;, &#39;-&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 0       chr8  49096849  49096949      -, Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: []]
-## (&#39;chr11&#39;, &#39;+&#39;)
-## [  Chromosome     Start       End Strand
-## 0      chr11  84953305  84953405      +,   Chromosome     Start       End Strand
-## 0      chr11  84352745  84352845      +,   Chromosome     Start       End Strand
-## 0      chr11  10939480  10939580      +]
-## (&#39;chr6&#39;, &#39;-&#39;)
-## [Empty DataFrame
-## Columns: [Chromosome, Start, End, Strand]
-## Index: [],   Chromosome     Start       End Strand
-## 0       chr6  94634172  94634272      -
-## 2       chr6  20389068  20389168      -, Empty DataFrame
+## 0       chrY  52050556  52050656      -,    Chromosome     Start       End Strand
+## 17       chrY  51608853  51608953      -
+## 18       chrY  18925685  18925785      -, Empty DataFrame
 ## Columns: [Chromosome, Start, End, Strand]
 ## Index: []]</code></pre>
 
@@ -560,12 +550,13 @@ more PyRanges returns empty dfs.</p>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -573,12 +564,12 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -593,7 +584,15 @@ gitbook.start({
 "link": null,
 "text": null
 },
+"view": {
+"link": null,
+"text": null
+},
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

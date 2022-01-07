@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>8 Printing PyRanges | PyRanges documentation</title>
-  <meta name="description" content="8 Printing PyRanges | PyRanges documentation" />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <title>8 Printing PyRanges | Subsetting PyRanges</title>
+  <meta name="description" content="8 Printing PyRanges | Subsetting PyRanges" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="8 Printing PyRanges | PyRanges documentation" />
+  <meta property="og:title" content="8 Printing PyRanges | Subsetting PyRanges" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="8 Printing PyRanges | PyRanges documentation" />
+  <meta name="twitter:title" content="8 Printing PyRanges | Subsetting PyRanges" />
   
   
   
@@ -24,22 +24,25 @@
 <meta name="author" content="Endre Bakken Stovner" />
 
 
-<meta name="date" content="2020-02-12" />
+<meta name="date" content="2022-01-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="piping-pyranges.html">
-<link rel="next" href="iterating-over-pyranges.html">
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="prev" href="piping-pyranges.html"/>
+<link rel="next" href="iterating-over-pyranges.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,28 +50,32 @@
 
 
 
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +84,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -111,6 +118,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 </head>
 
@@ -165,7 +173,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">PyRanges documentation</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Subsetting PyRanges</a>
           </h1>
         </div>
 
@@ -173,7 +181,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="printing-pyranges" class="section level1">
+<div id="printing-pyranges" class="section level1" number="8">
 <h1><span class="header-section-number">8</span> Printing PyRanges</h1>
 <p>There are 10 helper methods for printing PyRanges. These are p/print (regular print),
 mp (merged position print), sp (sorted print), msp (merged position sorted
@@ -187,10 +195,10 @@ strands, sorted print is the way to do it.</p>
 <p>All print methods except rp take an n-argument to control how many entries should be displayed.</p>
 <p>The pc, mpc, spc, mspc and rpc also return the pyranges so that print methods
 can be used to display intermediate results in pipes.</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb99-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb99-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb99-3" data-line-number="3">exons <span class="op">=</span> pr.data.exons()</a>
-<a class="sourceLine" id="cb99-4" data-line-number="4">exons.pc(n<span class="op">=</span><span class="dv">2</span>).mpc(n<span class="op">=</span><span class="dv">8</span>).sp()</a></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb96-1"><a href="printing-pyranges.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb96-2"><a href="printing-pyranges.html#cb96-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-3"><a href="printing-pyranges.html#cb96-3" aria-hidden="true" tabindex="-1"></a>exons <span class="op">=</span> pr.data.exons()</span>
+<span id="cb96-4"><a href="printing-pyranges.html#cb96-4" aria-hidden="true" tabindex="-1"></a>exons.pc(n<span class="op">=</span><span class="dv">2</span>).mpc(n<span class="op">=</span><span class="dv">8</span>).sp()</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+----------------------------------------+-----------+--------------+
 ## | Chromosome   | Start     | End       | Name                                   | Score     | Strand       |
 ## | (category)   | (int32)   | (int32)   | (object)                               | (int64)   | (category)   |
@@ -255,11 +263,11 @@ can be used to display intermediate results in pipes.</p>
 ## +--------------+-----------+-----------+---------------------------------------+-----------+--------------+
 ## Stranded PyRanges object has 1,000 rows and 6 columns from 2 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome, Start, End and Strand.</code></pre>
-<div class="sourceCode" id="cb101"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb101-1" data-line-number="1">exons.<span class="bu">print</span>(n<span class="op">=</span><span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb101-2" data-line-number="2">            merge_position<span class="op">=</span><span class="va">False</span>,</a>
-<a class="sourceLine" id="cb101-3" data-line-number="3">            sort<span class="op">=</span><span class="va">True</span>,</a>
-<a class="sourceLine" id="cb101-4" data-line-number="4">            formatting<span class="op">=</span>{<span class="st">&quot;Start&quot;</span>: <span class="st">&quot;{:,}&quot;</span>, <span class="st">&quot;Name&quot;</span>: <span class="st">&quot;</span><span class="sc">{:2.2}</span><span class="st">&quot;</span>},</a>
-<a class="sourceLine" id="cb101-5" data-line-number="5">            chain<span class="op">=</span><span class="va">False</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb98-1"><a href="printing-pyranges.html#cb98-1" aria-hidden="true" tabindex="-1"></a>exons.<span class="bu">print</span>(n<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb98-2"><a href="printing-pyranges.html#cb98-2" aria-hidden="true" tabindex="-1"></a>            merge_position<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb98-3"><a href="printing-pyranges.html#cb98-3" aria-hidden="true" tabindex="-1"></a>            sort<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb98-4"><a href="printing-pyranges.html#cb98-4" aria-hidden="true" tabindex="-1"></a>            formatting<span class="op">=</span>{<span class="st">&quot;Start&quot;</span>: <span class="st">&quot;{:,}&quot;</span>, <span class="st">&quot;Name&quot;</span>: <span class="st">&quot;</span><span class="sc">{:2.2}</span><span class="st">&quot;</span>},</span>
+<span id="cb98-5"><a href="printing-pyranges.html#cb98-5" aria-hidden="true" tabindex="-1"></a>            chain<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+
 ## | Chromosome   | Start     | End       | Name       | Score     | Strand       |
 ## | (category)   | (int32)   | (int32)   | (object)   | (int64)   | (category)   |
@@ -268,8 +276,8 @@ can be used to display intermediate results in pipes.</p>
 ## +--------------+-----------+-----------+------------+-----------+--------------+
 ## Stranded PyRanges object has 1,000 rows and 6 columns from 2 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome, Start, End and Strand.</code></pre>
-<div class="sourceCode" id="cb103"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb103-1" data-line-number="1">f1 <span class="op">=</span> pr.data.f1()</a>
-<a class="sourceLine" id="cb103-2" data-line-number="2">f1.rp()</a></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb100-1"><a href="printing-pyranges.html#cb100-1" aria-hidden="true" tabindex="-1"></a>f1 <span class="op">=</span> pr.data.f1()</span>
+<span id="cb100-2"><a href="printing-pyranges.html#cb100-2" aria-hidden="true" tabindex="-1"></a>f1.rp()</span></code></pre></div>
 <pre><code>## {(&#39;chr1&#39;, &#39;+&#39;):   Chromosome  Start  End       Name  Score Strand
 ## 0       chr1      3    6  interval1      0      +
 ## 2       chr1      8    9  interval3      0      +, (&#39;chr1&#39;, &#39;-&#39;):   Chromosome  Start  End       Name  Score Strand
@@ -286,12 +294,13 @@ can be used to display intermediate results in pipes.</p>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -299,12 +308,12 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -319,7 +328,15 @@ gitbook.start({
 "link": null,
 "text": null
 },
+"view": {
+"link": null,
+"text": null
+},
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

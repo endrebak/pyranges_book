@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>18 Finding the k closest intervals | PyRanges documentation</title>
-  <meta name="description" content="18 Finding the k closest intervals | PyRanges documentation" />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <title>18 Finding the k closest intervals | Subsetting PyRanges</title>
+  <meta name="description" content="18 Finding the k closest intervals | Subsetting PyRanges" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="18 Finding the k closest intervals | PyRanges documentation" />
+  <meta property="og:title" content="18 Finding the k closest intervals | Subsetting PyRanges" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="18 Finding the k closest intervals | PyRanges documentation" />
+  <meta name="twitter:title" content="18 Finding the k closest intervals | Subsetting PyRanges" />
   
   
   
@@ -24,22 +24,25 @@
 <meta name="author" content="Endre Bakken Stovner" />
 
 
-<meta name="date" content="2020-02-12" />
+<meta name="date" content="2022-01-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="finding-the-closest-intervals.html">
-<link rel="next" href="create-count-matrix-from-multiple-pyranges.html">
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="prev" href="finding-the-closest-intervals.html"/>
+<link rel="next" href="create-count-matrix-from-multiple-pyranges.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,28 +50,32 @@
 
 
 
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +84,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -111,6 +118,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 </head>
 
@@ -165,7 +173,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">PyRanges documentation</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Subsetting PyRanges</a>
           </h1>
         </div>
 
@@ -173,33 +181,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="finding-the-k-closest-intervals" class="section level1">
+<div id="finding-the-k-closest-intervals" class="section level1" number="18">
 <h1><span class="header-section-number">18</span> Finding the k closest intervals</h1>
 <p>With the k_nearest-method, you can search for the k nearest intervals in other that is
 nearest the ones in self.</p>
-<div class="sourceCode" id="cb229"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb229-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb229-2" data-line-number="2">gr <span class="op">=</span> pr.data.chipseq()</a>
-<a class="sourceLine" id="cb229-3" data-line-number="3">gr2 <span class="op">=</span> pr.data.chipseq_background()</a>
-<a class="sourceLine" id="cb229-4" data-line-number="4"><span class="bu">print</span>(gr.k_nearest(gr2, suffix<span class="op">=</span><span class="st">&quot;_Input&quot;</span>))</a></code></pre></div>
-<pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+---------------+-------------+--------------+---------------+----------------+------------+
-## | Chromosome   | Start     | End       | Name       | Score     | Strand       | Start_Input   | End_Input   | Name_Input   | Score_Input   | Strand_Input   | Distance   |
-## | (category)   | (int32)   | (int32)   | (object)   | (int64)   | (category)   | (int32)       | (int32)     | (object)     | (int64)       | (category)     | (int64)    |
-## |--------------+-----------+-----------+------------+-----------+--------------+---------------+-------------+--------------+---------------+----------------+------------|
-## | chr1         | 212609534 | 212609559 | U0         | 0         | +            | 212612028     | 212612053   | U0           | 0             | +              | 2470       |
-## | chr1         | 169887529 | 169887554 | U0         | 0         | +            | 169956702     | 169956727   | U0           | 0             | +              | 69149      |
-## | chr1         | 216711011 | 216711036 | U0         | 0         | +            | 216953225     | 216953250   | U0           | 0             | +              | 242190     |
-## | chr1         | 144227079 | 144227104 | U0         | 0         | +            | 144250645     | 144250670   | U0           | 0             | +              | 23542      |
-## | ...          | ...       | ...       | ...        | ...       | ...          | ...           | ...         | ...          | ...           | ...            | ...        |
-## | chrY         | 15224235  | 15224260  | U0         | 0         | -            | 11936866      | 11936891    | U0           | 0             | -              | 3287345    |
-## | chrY         | 13517892  | 13517917  | U0         | 0         | -            | 11936866      | 11936891    | U0           | 0             | -              | 1581002    |
-## | chrY         | 8010951   | 8010976   | U0         | 0         | -            | 10629111      | 10629136    | U0           | 0             | -              | -2618136   |
-## | chrY         | 7405376   | 7405401   | U0         | 0         | -            | 10629111      | 10629136    | U0           | 0             | -              | -3223711   |
-## +--------------+-----------+-----------+------------+-----------+--------------+---------------+-------------+--------------+---------------+----------------+------------+
-## Stranded PyRanges object has 10,708 rows and 12 columns from 24 chromosomes.
+<div class="sourceCode" id="cb223"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb223-1"><a href="finding-the-k-closest-intervals.html#cb223-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb223-2"><a href="finding-the-k-closest-intervals.html#cb223-2" aria-hidden="true" tabindex="-1"></a>gr <span class="op">=</span> pr.data.chipseq()</span>
+<span id="cb223-3"><a href="finding-the-k-closest-intervals.html#cb223-3" aria-hidden="true" tabindex="-1"></a>gr2 <span class="op">=</span> pr.data.chipseq_background()</span>
+<span id="cb223-4"><a href="finding-the-k-closest-intervals.html#cb223-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr.k_nearest(gr2, suffix<span class="op">=</span><span class="st">&quot;_Input&quot;</span>))</span></code></pre></div>
+<pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+-----------+-----------+------------+-----------+--------------+------------+
+## | Chromosome   | Start     | End       | Name       | Score     | Strand       | Start_b   | End_b     | Name_b     | Score_b   | Strand_b     | Distance   |
+## | (category)   | (int32)   | (int32)   | (object)   | (int64)   | (category)   | (int32)   | (int32)   | (object)   | (int64)   | (category)   | (int64)    |
+## |--------------+-----------+-----------+------------+-----------+--------------+-----------+-----------+------------+-----------+--------------+------------|
+## | chr1         | 212609534 | 212609559 | U0         | 0         | +            | 212612028 | 212612053 | U0         | 0         | +            | 2470       |
+## | chr1         | 169887529 | 169887554 | U0         | 0         | +            | 169956702 | 169956727 | U0         | 0         | +            | 69149      |
+## | chr1         | 216711011 | 216711036 | U0         | 0         | +            | 216953225 | 216953250 | U0         | 0         | +            | 242190     |
+## | chr1         | 144227079 | 144227104 | U0         | 0         | +            | 144250645 | 144250670 | U0         | 0         | +            | 23542      |
+## | ...          | ...       | ...       | ...        | ...       | ...          | ...       | ...       | ...        | ...       | ...          | ...        |
+## | chrY         | 15224235  | 15224260  | U0         | 0         | -            | 11936866  | 11936891  | U0         | 0         | -            | 3287345    |
+## | chrY         | 13517892  | 13517917  | U0         | 0         | -            | 11936866  | 11936891  | U0         | 0         | -            | 1581002    |
+## | chrY         | 8010951   | 8010976   | U0         | 0         | -            | 10629111  | 10629136  | U0         | 0         | -            | -2618136   |
+## | chrY         | 7405376   | 7405401   | U0         | 0         | -            | 10629111  | 10629136  | U0         | 0         | -            | -3223711   |
+## +--------------+-----------+-----------+------------+-----------+--------------+-----------+-----------+------------+-----------+--------------+------------+
+## Stranded PyRanges object has 10,000 rows and 12 columns from 24 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p>The nearest method takes a strandedness option, which can either be
-<code>&quot;same&quot;</code>, <code>&quot;opposite&quot;</code> or <code>False</code>/<code>None</code></p>
-<div class="sourceCode" id="cb231"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb231-1" data-line-number="1"><span class="bu">print</span>(gr.nearest(gr2, suffix<span class="op">=</span><span class="st">&quot;_Input&quot;</span>, strandedness<span class="op">=</span><span class="st">&quot;opposite&quot;</span>))</a></code></pre></div>
+<code>"same"</code>, <code>"opposite"</code> or <code>False</code>/<code>None</code></p>
+<div class="sourceCode" id="cb225"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb225-1"><a href="finding-the-k-closest-intervals.html#cb225-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr.nearest(gr2, suffix<span class="op">=</span><span class="st">&quot;_Input&quot;</span>, strandedness<span class="op">=</span><span class="st">&quot;opposite&quot;</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+---------------+-------------+--------------+---------------+----------------+------------+
 ## | Chromosome   | Start     | End       | Name       | Score     | Strand       | Start_Input   | End_Input   | Name_Input   | Score_Input   | Strand_Input   | Distance   |
 ## | (category)   | (int32)   | (int32)   | (object)   | (int64)   | (category)   | (int32)       | (int32)     | (object)     | (int64)       | (category)     | (int64)    |
@@ -217,7 +225,7 @@ nearest the ones in self.</p>
 ## Stranded PyRanges object has 10,000 rows and 12 columns from 24 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p>The nearest method takes four further options, namely how, overlap, ties and k.
-How can take the values <code>None</code>, <code>&quot;upstream&quot;</code>, <code>&quot;downstream&quot;.</code>“upstream”<code>and</code>“downstream”<code>are always in reference to the PyRange the method is called on. The default is</code>None`, which means that PyRanges looks in both directions. The
+How can take the values <code>None</code>, <code>"upstream"</code>, <code>"downstream".</code>“upstream”<code>and</code>“downstream”<code>are always in reference to the PyRange the method is called on. The default is</code>None`, which means that PyRanges looks in both directions. The
 overlap argument is a bool which indicates whether you want to include overlaps
 or not. Ties is the method in which you want to resolve ties, that is intervals
 with an equal distance to your query interval. The options are None which means
@@ -227,25 +235,25 @@ last interval for each separate distance. The option “different” gives you a
 nearest intervals from k different distances. k is the number of different
 intervals you want to find. It can be a vector with the length of the query
 vector.</p>
-<div class="sourceCode" id="cb233"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb233-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb233-2" data-line-number="2">gr <span class="op">=</span> pr.data.chipseq()</a>
-<a class="sourceLine" id="cb233-3" data-line-number="3">gr2 <span class="op">=</span> pr.data.chipseq_background()</a>
-<a class="sourceLine" id="cb233-4" data-line-number="4">gr.k_nearest(gr2, suffix<span class="op">=</span><span class="st">&quot;_Input&quot;</span>, ks<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">2</span>] <span class="op">*</span> <span class="dv">5000</span>).<span class="bu">print</span>()</a></code></pre></div>
-<pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+---------------+-------------+--------------+---------------+----------------+------------+
-## | Chromosome   | Start     | End       | Name       | Score     | Strand       | Start_Input   | End_Input   | Name_Input   | Score_Input   | Strand_Input   | Distance   |
-## | (category)   | (int32)   | (int32)   | (object)   | (int64)   | (category)   | (int32)       | (int32)     | (object)     | (int64)       | (category)     | (int64)    |
-## |--------------+-----------+-----------+------------+-----------+--------------+---------------+-------------+--------------+---------------+----------------+------------|
-## | chr1         | 212609534 | 212609559 | U0         | 0         | +            | 212612028     | 212612053   | U0           | 0             | +              | 2470       |
-## | chr1         | 169887529 | 169887554 | U0         | 0         | +            | 169956702     | 169956727   | U0           | 0             | +              | 69149      |
-## | chr1         | 216711011 | 216711036 | U0         | 0         | +            | 216953225     | 216953250   | U0           | 0             | +              | 242190     |
-## | chr1         | 144227079 | 144227104 | U0         | 0         | +            | 144250645     | 144250670   | U0           | 0             | +              | 23542      |
-## | ...          | ...       | ...       | ...        | ...       | ...          | ...           | ...         | ...          | ...           | ...            | ...        |
-## | chrY         | 15224235  | 15224260  | U0         | 0         | -            | 11936866      | 11936891    | U0           | 0             | -              | 3287345    |
-## | chrY         | 13517892  | 13517917  | U0         | 0         | -            | 11936866      | 11936891    | U0           | 0             | -              | 1581002    |
-## | chrY         | 8010951   | 8010976   | U0         | 0         | -            | 10629111      | 10629136    | U0           | 0             | -              | -2618136   |
-## | chrY         | 7405376   | 7405401   | U0         | 0         | -            | 10629111      | 10629136    | U0           | 0             | -              | -3223711   |
-## +--------------+-----------+-----------+------------+-----------+--------------+---------------+-------------+--------------+---------------+----------------+------------+
-## Stranded PyRanges object has 10,708 rows and 12 columns from 24 chromosomes.
+<div class="sourceCode" id="cb227"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb227-1"><a href="finding-the-k-closest-intervals.html#cb227-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb227-2"><a href="finding-the-k-closest-intervals.html#cb227-2" aria-hidden="true" tabindex="-1"></a>gr <span class="op">=</span> pr.data.chipseq()</span>
+<span id="cb227-3"><a href="finding-the-k-closest-intervals.html#cb227-3" aria-hidden="true" tabindex="-1"></a>gr2 <span class="op">=</span> pr.data.chipseq_background()</span>
+<span id="cb227-4"><a href="finding-the-k-closest-intervals.html#cb227-4" aria-hidden="true" tabindex="-1"></a>gr.k_nearest(gr2, suffix<span class="op">=</span><span class="st">&quot;_Input&quot;</span>, k<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">2</span>] <span class="op">*</span> <span class="dv">5000</span>).<span class="bu">print</span>()</span></code></pre></div>
+<pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+-----------+-----------+------------+-----------+--------------+------------+
+## | Chromosome   | Start     | End       | Name       | Score     | Strand       | Start_b   | End_b     | Name_b     | Score_b   | Strand_b     | Distance   |
+## | (category)   | (int32)   | (int32)   | (object)   | (int64)   | (category)   | (int32)   | (int32)   | (object)   | (int64)   | (category)   | (int64)    |
+## |--------------+-----------+-----------+------------+-----------+--------------+-----------+-----------+------------+-----------+--------------+------------|
+## | chr1         | 212609534 | 212609559 | U0         | 0         | +            | 212612028 | 212612053 | U0         | 0         | +            | 2470       |
+## | chr1         | 169887529 | 169887554 | U0         | 0         | +            | 169969537 | 169969562 | U0         | 0         | -            | 81984      |
+## | chr1         | 169887529 | 169887554 | U0         | 0         | +            | 169956702 | 169956727 | U0         | 0         | +            | 69149      |
+## | chr1         | 216711011 | 216711036 | U0         | 0         | +            | 216953225 | 216953250 | U0         | 0         | +            | 242190     |
+## | ...          | ...       | ...       | ...        | ...       | ...          | ...       | ...       | ...        | ...       | ...          | ...        |
+## | chrY         | 13517892  | 13517917  | U0         | 0         | -            | 11918814  | 11918839  | U0         | 0         | -            | 1599054    |
+## | chrY         | 8010951   | 8010976   | U0         | 0         | -            | 10629111  | 10629136  | U0         | 0         | -            | -2618136   |
+## | chrY         | 7405376   | 7405401   | U0         | 0         | -            | 10629111  | 10629136  | U0         | 0         | -            | -3223711   |
+## | chrY         | 7405376   | 7405401   | U0         | 0         | -            | 10632456  | 10632481  | U0         | 0         | -            | -3227056   |
+## +--------------+-----------+-----------+------------+-----------+--------------+-----------+-----------+------------+-----------+--------------+------------+
+## Stranded PyRanges object has 15,000 rows and 12 columns from 24 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p>Note that nearest intervals that are upstream of the query interval have a
 negative distance.</p>
@@ -261,12 +269,13 @@ negative distance.</p>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -274,12 +283,12 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -294,7 +303,15 @@ gitbook.start({
 "link": null,
 "text": null
 },
+"view": {
+"link": null,
+"text": null
+},
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>11 Summarizing PyRanges | PyRanges documentation</title>
-  <meta name="description" content="11 Summarizing PyRanges | PyRanges documentation" />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <title>11 Summarizing PyRanges | Subsetting PyRanges</title>
+  <meta name="description" content="11 Summarizing PyRanges | Subsetting PyRanges" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="11 Summarizing PyRanges | PyRanges documentation" />
+  <meta property="og:title" content="11 Summarizing PyRanges | Subsetting PyRanges" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="11 Summarizing PyRanges | PyRanges documentation" />
+  <meta name="twitter:title" content="11 Summarizing PyRanges | Subsetting PyRanges" />
   
   
   
@@ -24,22 +24,25 @@
 <meta name="author" content="Endre Bakken Stovner" />
 
 
-<meta name="date" content="2020-02-12" />
+<meta name="date" content="2022-01-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="sorting-pyranges.html">
-<link rel="next" href="methods-for-manipulating-single-pyranges.html">
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="prev" href="sorting-pyranges.html"/>
+<link rel="next" href="methods-for-manipulating-single-pyranges.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,28 +50,32 @@
 
 
 
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +84,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -111,6 +118,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 </head>
 
@@ -165,7 +173,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">PyRanges documentation</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Subsetting PyRanges</a>
           </h1>
         </div>
 
@@ -173,18 +181,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="summarizing-pyranges" class="section level1">
+<div id="summarizing-pyranges" class="section level1" number="11">
 <h1><span class="header-section-number">11</span> Summarizing PyRanges</h1>
 <p>The summary-function gives a summary of the lengths of the intervals in a PyRange:</p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb125-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb125-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb125-3" data-line-number="3"><span class="im">import</span> pandas <span class="im">as</span> pd</a>
-<a class="sourceLine" id="cb125-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb125-5" data-line-number="5"><span class="im">from</span> io <span class="im">import</span> StringIO</a>
-<a class="sourceLine" id="cb125-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb125-7" data-line-number="7">gr <span class="op">=</span> pr.data.exons()</a>
-<a class="sourceLine" id="cb125-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb125-9" data-line-number="9"><span class="bu">print</span>(gr)</a></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb122-1"><a href="summarizing-pyranges.html#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb122-2"><a href="summarizing-pyranges.html#cb122-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-3"><a href="summarizing-pyranges.html#cb122-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb122-4"><a href="summarizing-pyranges.html#cb122-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-5"><a href="summarizing-pyranges.html#cb122-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> io <span class="im">import</span> StringIO</span>
+<span id="cb122-6"><a href="summarizing-pyranges.html#cb122-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-7"><a href="summarizing-pyranges.html#cb122-7" aria-hidden="true" tabindex="-1"></a>gr <span class="op">=</span> pr.data.exons()</span>
+<span id="cb122-8"><a href="summarizing-pyranges.html#cb122-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-9"><a href="summarizing-pyranges.html#cb122-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr)</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+----------------------------------------+-----------+--------------+
 ## | Chromosome   | Start     | End       | Name                                   | Score     | Strand       |
 ## | (category)   | (int32)   | (int32)   | (object)                               | (int64)   | (category)   |
@@ -201,26 +209,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## +--------------+-----------+-----------+----------------------------------------+-----------+--------------+
 ## Stranded PyRanges object has 1,000 rows and 6 columns from 2 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb127"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb127-1" data-line-number="1"><span class="bu">print</span>(gr.summary())</a></code></pre></div>
-<pre><code>## +-------+-----------+---------------------+-----------------------+
-## |       |   pyrange |   coverage_stranded |   coverage_unstranded |
-## |-------+-----------+---------------------+-----------------------|
-## | count |  1000     |             873     |               873     |
-## | mean  |   304.292 |             314.255 |               314.255 |
-## | std   |   640.013 |             666.23  |               666.23  |
-## | min   |     4     |               4     |                 4     |
-## | 25%   |    88     |              88     |                88     |
-## | 50%   |   127     |             127     |               127     |
-## | 75%   |   195.5   |             199     |               199     |
-## | max   |  6063     |            6063     |              6063     |
-## +-------+-----------+---------------------+-----------------------+
+<div class="sourceCode" id="cb124"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb124-1"><a href="summarizing-pyranges.html#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr.summary())</span></code></pre></div>
+<pre><code>## +-------+------------+--------------------+--------------------+-----------------------+
+## |       |    pyrange |   coverage_forward |   coverage_reverse |   coverage_unstranded |
+## |-------+------------+--------------------+--------------------+-----------------------|
+## | count |   1000     |            452     |            421     |               873     |
+## | mean  |    304.292 |            314.066 |            314.458 |               314.255 |
+## | std   |    640.013 |            732.655 |            587.486 |               666.23  |
+## | min   |      4     |             15     |              4     |                 4     |
+## | 25%   |     88     |             84.75  |             94     |                88     |
+## | 50%   |    127     |            123     |            138     |               127     |
+## | 75%   |    195.5   |            183     |            212     |               199     |
+## | max   |   6063     |           6063     |           5322     |              6063     |
+## | sum   | 304292     |         141958     |         132387     |            274345     |
+## +-------+------------+--------------------+--------------------+-----------------------+
 ## None</code></pre>
 <p>The column <code>coverage_stranded</code> tells you how the data looks when merging all
 overlapping features (taking strand into account), and <code>coverage_unstranded</code> is
 the same, but all features are merged independent of their strand.</p>
 <p>To only get the length in bp of a PyRanges, use the length()-function.
 It takes an argument as_dict=False, which returns the lengths as a vector.</p>
-<div class="sourceCode" id="cb129"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb129-1" data-line-number="1"><span class="bu">print</span>(gr.lengths())</a></code></pre></div>
+<div class="sourceCode" id="cb126"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb126-1"><a href="summarizing-pyranges.html#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr.lengths())</span></code></pre></div>
 <pre><code>## 0       262
 ## 1       478
 ## 2       181
@@ -233,7 +242,7 @@ It takes an argument as_dict=False, which returns the lengths as a vector.</p>
 ## 998    1504
 ## 999      24
 ## Length: 1000, dtype: int32</code></pre>
-<div class="sourceCode" id="cb131"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb131-1" data-line-number="1"><span class="bu">print</span>(gr.lengths(as_dict<span class="op">=</span><span class="va">False</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb128-1"><a href="summarizing-pyranges.html#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr.lengths(as_dict<span class="op">=</span><span class="va">False</span>))</span></code></pre></div>
 <pre><code>## 0       262
 ## 1       478
 ## 2       181
@@ -248,9 +257,9 @@ It takes an argument as_dict=False, which returns the lengths as a vector.</p>
 ## Length: 1000, dtype: int32</code></pre>
 <p>To get the length of the PyRanges in bp, use the <code>length</code> property.
 To get the non-overlapping nucleotides, use the merge()-function first.</p>
-<div class="sourceCode" id="cb133"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb133-1" data-line-number="1"><span class="bu">print</span>(gr.length)</a></code></pre></div>
+<div class="sourceCode" id="cb130"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb130-1"><a href="summarizing-pyranges.html#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr.length)</span></code></pre></div>
 <pre><code>## 304292</code></pre>
-<div class="sourceCode" id="cb135"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb135-1" data-line-number="1"><span class="bu">print</span>(gr.merge().length)</a></code></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb132-1"><a href="summarizing-pyranges.html#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr.merge().length)</span></code></pre></div>
 <pre><code>## 274345</code></pre>
 
 </div>
@@ -264,12 +273,13 @@ To get the non-overlapping nucleotides, use the merge()-function first.</p>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -277,12 +287,12 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -297,7 +307,15 @@ gitbook.start({
 "link": null,
 "text": null
 },
+"view": {
+"link": null,
+"text": null
+},
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

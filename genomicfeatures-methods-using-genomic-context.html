@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>31 GenomicFeatures: methods using genomic context | PyRanges documentation</title>
-  <meta name="description" content="31 GenomicFeatures: methods using genomic context | PyRanges documentation" />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <title>31 GenomicFeatures: methods using genomic context | Subsetting PyRanges</title>
+  <meta name="description" content="31 GenomicFeatures: methods using genomic context | Subsetting PyRanges" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="31 GenomicFeatures: methods using genomic context | PyRanges documentation" />
+  <meta property="og:title" content="31 GenomicFeatures: methods using genomic context | Subsetting PyRanges" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="31 GenomicFeatures: methods using genomic context | PyRanges documentation" />
+  <meta name="twitter:title" content="31 GenomicFeatures: methods using genomic context | Subsetting PyRanges" />
   
   
   
@@ -24,22 +24,25 @@
 <meta name="author" content="Endre Bakken Stovner" />
 
 
-<meta name="date" content="2020-02-12" />
+<meta name="date" content="2022-01-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="using-multiple-cores.html">
-<link rel="next" href="fetching-gene-tracks-as-pyranges.html">
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="prev" href="using-multiple-cores.html"/>
+<link rel="next" href="fetching-gene-tracks-as-pyranges.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,28 +50,32 @@
 
 
 
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +84,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -111,6 +118,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 </head>
 
@@ -165,7 +173,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">PyRanges documentation</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Subsetting PyRanges</a>
           </h1>
         </div>
 
@@ -173,15 +181,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="genomicfeatures-methods-using-genomic-context" class="section level1">
+<div id="genomicfeatures-methods-using-genomic-context" class="section level1" number="31">
 <h1><span class="header-section-number">31</span> GenomicFeatures: methods using genomic context</h1>
 <p>The PyRanges library has a few methods that operate on a genomic context. Their
 functions are found in the <code>pyranges.gf</code> namespace and the methods to be used on
 a PyRanges-object are found in the <code>gr.features</code> namespace.</p>
 <p><code>introns</code> can be used on pyranges annotated with gene_id and exon_id.</p>
-<div class="sourceCode" id="cb335"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb335-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb335-2" data-line-number="2">gr <span class="op">=</span> pr.data.ucsc_bed()</a>
-<a class="sourceLine" id="cb335-3" data-line-number="3"><span class="bu">print</span>(gr)</a></code></pre></div>
+<div class="sourceCode" id="cb329"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb329-1"><a href="genomicfeatures-methods-using-genomic-context.html#cb329-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb329-2"><a href="genomicfeatures-methods-using-genomic-context.html#cb329-2" aria-hidden="true" tabindex="-1"></a>gr <span class="op">=</span> pr.data.ucsc_bed()</span>
+<span id="cb329-3"><a href="genomicfeatures-methods-using-genomic-context.html#cb329-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr)</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+------------+-----------------+--------------+---------------+-------------------+
 ## | Chromosome   | Start     | End       | Feature    | gene_id    | transcript_id   | Strand       | exon_number   | transcript_name   |
 ## | (category)   | (int32)   | (int32)   | (object)   | (object)   | (float64)       | (category)   | (float64)     | (object)          |
@@ -198,27 +206,27 @@ a PyRanges-object are found in the <code>gr.features</code> namespace.</p>
 ## +--------------+-----------+-----------+------------+------------+-----------------+--------------+---------------+-------------------+
 ## Stranded PyRanges object has 5,519 rows and 9 columns from 30 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb337"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb337-1" data-line-number="1"><span class="bu">print</span>(gr.features.introns(by<span class="op">=</span><span class="st">&quot;transcript&quot;</span>)) <span class="co"># default is by gene</span></a></code></pre></div>
-<pre><code>## +--------------+-----------+-----------+------------+-------------+-----------------+--------------+---------------+-------------------+
-## | Chromosome   | Start     | End       | Feature    | gene_id     | transcript_id   | Strand       | exon_number   | transcript_name   |
-## | (object)     | (int32)   | (int32)   | (object)   | (float64)   | (float64)       | (category)   | (float64)     | (object)          |
-## |--------------+-----------+-----------+------------+-------------+-----------------+--------------+---------------+-------------------|
-## | chr1         | 12227     | 12612     | intron     | 0.0         | 0.0             | +            | nan           | NR_148357         |
-## | chr1         | 12721     | 13220     | intron     | 0.0         | 0.0             | +            | nan           | NR_148357         |
-## | chr1         | 12227     | 12612     | intron     | 1.0         | 1.0             | +            | nan           | NR_046018         |
-## | chr1         | 12721     | 13220     | intron     | 1.0         | 1.0             | +            | nan           | NR_046018         |
-## | ...          | ...       | ...       | ...        | ...         | ...             | ...          | ...           | ...               |
-## | chrX         | 9714193   | 9716613   | intron     | 361.0       | 361.0           | -            | nan           | NM_000273         |
-## | chrX         | 9716706   | 9727371   | intron     | 361.0       | 361.0           | -            | nan           | NM_000273         |
-## | chrX         | 9727466   | 9728756   | intron     | 361.0       | 361.0           | -            | nan           | NM_000273         |
-## | chrX         | 9728866   | 9733607   | intron     | 361.0       | 361.0           | -            | nan           | NM_000273         |
-## +--------------+-----------+-----------+------------+-------------+-----------------+--------------+---------------+-------------------+
+<div class="sourceCode" id="cb331"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb331-1"><a href="genomicfeatures-methods-using-genomic-context.html#cb331-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr.features.introns(by<span class="op">=</span><span class="st">&quot;transcript&quot;</span>)) <span class="co"># default is by gene</span></span></code></pre></div>
+<pre><code>## +--------------+-----------+-----------+------------+--------------+-----------------+--------------+---------------+-------------------+
+## | Chromosome   | Start     | End       | Feature    | gene_id      | transcript_id   | Strand       | exon_number   | transcript_name   |
+## | (object)     | (int32)   | (int32)   | (object)   | (object)     | (float64)       | (category)   | (float64)     | (object)          |
+## |--------------+-----------+-----------+------------+--------------+-----------------+--------------+---------------+-------------------|
+## | chr1         | 12227     | 12612     | intron     | LOC102725121 | 0.0             | +            | nan           | NR_148357         |
+## | chr1         | 12721     | 13220     | intron     | LOC102725121 | 0.0             | +            | nan           | NR_148357         |
+## | chr1         | 12227     | 12612     | intron     | DDX11L1      | 1.0             | +            | nan           | NR_046018         |
+## | chr1         | 12721     | 13220     | intron     | DDX11L1      | 1.0             | +            | nan           | NR_046018         |
+## | ...          | ...       | ...       | ...        | ...          | ...             | ...          | ...           | ...               |
+## | chrX         | 9714193   | 9716613   | intron     | GPR143       | 361.0           | -            | nan           | NM_000273         |
+## | chrX         | 9716706   | 9727371   | intron     | GPR143       | 361.0           | -            | nan           | NM_000273         |
+## | chrX         | 9727466   | 9728756   | intron     | GPR143       | 361.0           | -            | nan           | NM_000273         |
+## | chrX         | 9728866   | 9733607   | intron     | GPR143       | 361.0           | -            | nan           | NM_000273         |
+## +--------------+-----------+-----------+------------+--------------+-----------------+--------------+---------------+-------------------+
 ## Stranded PyRanges object has 4,128 rows and 9 columns from 30 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p><code>tes/tss</code> can be used to find the starts and ends of transcripts:</p>
-<div class="sourceCode" id="cb339"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb339-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb339-2" data-line-number="2">gr <span class="op">=</span> pr.data.ucsc_bed()</a>
-<a class="sourceLine" id="cb339-3" data-line-number="3"><span class="bu">print</span>(gr[gr.Feature <span class="op">==</span> <span class="st">&quot;transcript&quot;</span>])</a></code></pre></div>
+<div class="sourceCode" id="cb333"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb333-1"><a href="genomicfeatures-methods-using-genomic-context.html#cb333-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb333-2"><a href="genomicfeatures-methods-using-genomic-context.html#cb333-2" aria-hidden="true" tabindex="-1"></a>gr <span class="op">=</span> pr.data.ucsc_bed()</span>
+<span id="cb333-3"><a href="genomicfeatures-methods-using-genomic-context.html#cb333-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr[gr.Feature <span class="op">==</span> <span class="st">&quot;transcript&quot;</span>])</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+--------------+-----------------+--------------+---------------+-------------------+
 ## | Chromosome   | Start     | End       | Feature    | gene_id      | transcript_id   | Strand       | exon_number   | transcript_name   |
 ## | (category)   | (int32)   | (int32)   | (object)   | (object)     | (float64)       | (category)   | (float64)     | (object)          |
@@ -235,30 +243,30 @@ a PyRanges-object are found in the <code>gr.features</code> namespace.</p>
 ## +--------------+-----------+-----------+------------+--------------+-----------------+--------------+---------------+-------------------+
 ## Stranded PyRanges object has 500 rows and 9 columns from 30 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb341"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb341-1" data-line-number="1"><span class="bu">print</span>(gr.features.tes()) <span class="co"># default is by gene</span></a></code></pre></div>
+<div class="sourceCode" id="cb335"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb335-1"><a href="genomicfeatures-methods-using-genomic-context.html#cb335-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr.features.tes()) <span class="co"># default is by gene</span></span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+--------------+-----------------+--------------+---------------+-------------------+
 ## | Chromosome   | Start     | End       | Feature    | gene_id      | transcript_id   | Strand       | exon_number   | transcript_name   |
 ## | (category)   | (int32)   | (int32)   | (object)   | (object)     | (float64)       | (category)   | (float64)     | (object)          |
 ## |--------------+-----------+-----------+------------+--------------+-----------------+--------------+---------------+-------------------|
-## | chr1         | 14362     | 14363     | tes        | LOC102725121 | 0.0             | +            | nan           | NR_148357         |
-## | chr1         | 14409     | 14410     | tes        | DDX11L1      | 1.0             | +            | nan           | NR_046018         |
-## | chr1         | 30503     | 30504     | tes        | MIR1302-2    | 7.0             | +            | nan           | NR_036051         |
-## | chr1         | 30503     | 30504     | tes        | MIR1302-9    | 8.0             | +            | nan           | NR_036266         |
+## | chr1         | 14361     | 14362     | tes        | LOC102725121 | 0.0             | +            | nan           | NR_148357         |
+## | chr1         | 14408     | 14409     | tes        | DDX11L1      | 1.0             | +            | nan           | NR_046018         |
+## | chr1         | 30502     | 30503     | tes        | MIR1302-2    | 7.0             | +            | nan           | NR_036051         |
+## | chr1         | 30502     | 30503     | tes        | MIR1302-9    | 8.0             | +            | nan           | NR_036266         |
 ## | ...          | ...       | ...       | ...        | ...          | ...             | ...          | ...           | ...               |
-## | chrX         | 131352061 | 131352062 | tes        | RAP2C        | 155.0           | -            | nan           | NM_021183         |
-## | chrX         | 134049287 | 134049288 | tes        | MOSPD1       | 156.0           | -            | nan           | NM_001306188      |
-## | chrX         | 152160757 | 152160758 | tes        | PNMA5        | 259.0           | -            | nan           | NM_052926         |
-## | chrX         | 152666808 | 152666809 | tes        | PNMA6E       | 260.0           | -            | nan           | NM_001351293      |
+## | chrX         | 131337052 | 131337053 | tes        | RAP2C        | 155.0           | -            | nan           | NM_021183         |
+## | chrX         | 134021661 | 134021662 | tes        | MOSPD1       | 156.0           | -            | nan           | NM_001306188      |
+## | chrX         | 152157367 | 152157368 | tes        | PNMA5        | 259.0           | -            | nan           | NM_052926         |
+## | chrX         | 152661096 | 152661097 | tes        | PNMA6E       | 260.0           | -            | nan           | NM_001351293      |
 ## +--------------+-----------+-----------+------------+--------------+-----------------+--------------+---------------+-------------------+
 ## Stranded PyRanges object has 500 rows and 9 columns from 30 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p><code>tile_genome</code> splits a PyRanges of chromosome sizes into a tiled genome.</p>
-<div class="sourceCode" id="cb343"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb343-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb343-2" data-line-number="2">cs <span class="op">=</span> pr.data.chromsizes()</a>
-<a class="sourceLine" id="cb343-3" data-line-number="3"><span class="bu">print</span>(cs)</a>
-<a class="sourceLine" id="cb343-4" data-line-number="4"><span class="co"># can also do</span></a>
-<a class="sourceLine" id="cb343-5" data-line-number="5"><span class="co"># pip install pyranges_db as db</span></a>
-<a class="sourceLine" id="cb343-6" data-line-number="6"><span class="co"># cs =  db.ucsc.chromsizes(&quot;hg19&quot;)</span></a></code></pre></div>
+<div class="sourceCode" id="cb337"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb337-1"><a href="genomicfeatures-methods-using-genomic-context.html#cb337-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb337-2"><a href="genomicfeatures-methods-using-genomic-context.html#cb337-2" aria-hidden="true" tabindex="-1"></a>cs <span class="op">=</span> pr.data.chromsizes()</span>
+<span id="cb337-3"><a href="genomicfeatures-methods-using-genomic-context.html#cb337-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cs)</span>
+<span id="cb337-4"><a href="genomicfeatures-methods-using-genomic-context.html#cb337-4" aria-hidden="true" tabindex="-1"></a><span class="co"># can also do</span></span>
+<span id="cb337-5"><a href="genomicfeatures-methods-using-genomic-context.html#cb337-5" aria-hidden="true" tabindex="-1"></a><span class="co"># pip install pyranges_db as db</span></span>
+<span id="cb337-6"><a href="genomicfeatures-methods-using-genomic-context.html#cb337-6" aria-hidden="true" tabindex="-1"></a><span class="co"># cs =  db.ucsc.chromsizes(&quot;hg19&quot;)</span></span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+
 ## | Chromosome   | Start     | End       |
 ## | (category)   | (int32)   | (int32)   |
@@ -268,15 +276,15 @@ a PyRanges-object are found in the <code>gr.features</code> namespace.</p>
 ## | chr3         | 0         | 198022430 |
 ## | chr4         | 0         | 191154276 |
 ## | ...          | ...       | ...       |
-## | chrY         | 0         | 59373566  |
-## | chrX         | 0         | 155270560 |
-## | chrM         | 0         | 16571     |
 ## | chr22        | 0         | 51304566  |
+## | chrM         | 0         | 16571     |
+## | chrX         | 0         | 155270560 |
+## | chrY         | 0         | 59373566  |
 ## +--------------+-----------+-----------+
 ## Unstranded PyRanges object has 25 rows and 3 columns from 25 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome.</code></pre>
-<div class="sourceCode" id="cb345"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb345-1" data-line-number="1">tile_size <span class="op">=</span> <span class="bu">int</span>(<span class="fl">1e6</span>)</a>
-<a class="sourceLine" id="cb345-2" data-line-number="2"><span class="bu">print</span>(pr.gf.tile_genome(cs, tile_size, tile_last<span class="op">=</span><span class="va">False</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb339"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb339-1"><a href="genomicfeatures-methods-using-genomic-context.html#cb339-1" aria-hidden="true" tabindex="-1"></a>tile_size <span class="op">=</span> <span class="bu">int</span>(<span class="fl">1e6</span>)</span>
+<span id="cb339-2"><a href="genomicfeatures-methods-using-genomic-context.html#cb339-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pr.gf.tile_genome(cs, tile_size, tile_last<span class="op">=</span><span class="va">False</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+
 ## | Chromosome   | Start     | End       |
 ## | (category)   | (int32)   | (int32)   |
@@ -293,7 +301,7 @@ a PyRanges-object are found in the <code>gr.features</code> namespace.</p>
 ## +--------------+-----------+-----------+
 ## Unstranded PyRanges object has 3,114 rows and 3 columns from 25 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome.</code></pre>
-<div class="sourceCode" id="cb347"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb347-1" data-line-number="1"><span class="bu">print</span>(pr.gf.tile_genome(cs, tile_size, tile_last<span class="op">=</span><span class="va">True</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb341"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb341-1"><a href="genomicfeatures-methods-using-genomic-context.html#cb341-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pr.gf.tile_genome(cs, tile_size, tile_last<span class="op">=</span><span class="va">True</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+
 ## | Chromosome   | Start     | End       |
 ## | (category)   | (int32)   | (int32)   |
@@ -313,13 +321,13 @@ a PyRanges-object are found in the <code>gr.features</code> namespace.</p>
 <p><code>genome_bounds</code> removes all intervals in the PyRanges which are outside the
 genome bounds. If the flag clip is used, the parts of the intervals which are
 inside the boundaries are kept.</p>
-<div class="sourceCode" id="cb349"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb349-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb349-2" data-line-number="2">cs <span class="op">=</span> pr.data.chromsizes()</a>
-<a class="sourceLine" id="cb349-3" data-line-number="3">gr <span class="op">=</span> pr.data.chipseq()</a>
-<a class="sourceLine" id="cb349-4" data-line-number="4"><span class="bu">print</span>(cs)</a>
-<a class="sourceLine" id="cb349-5" data-line-number="5"><span class="co"># can also do</span></a>
-<a class="sourceLine" id="cb349-6" data-line-number="6"><span class="co"># pip install pyranges_db as db</span></a>
-<a class="sourceLine" id="cb349-7" data-line-number="7"><span class="co"># cs =  db.ucsc.chromsizes(&quot;hg19&quot;)</span></a></code></pre></div>
+<div class="sourceCode" id="cb343"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb343-1"><a href="genomicfeatures-methods-using-genomic-context.html#cb343-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb343-2"><a href="genomicfeatures-methods-using-genomic-context.html#cb343-2" aria-hidden="true" tabindex="-1"></a>cs <span class="op">=</span> pr.data.chromsizes()</span>
+<span id="cb343-3"><a href="genomicfeatures-methods-using-genomic-context.html#cb343-3" aria-hidden="true" tabindex="-1"></a>gr <span class="op">=</span> pr.data.chipseq()</span>
+<span id="cb343-4"><a href="genomicfeatures-methods-using-genomic-context.html#cb343-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cs)</span>
+<span id="cb343-5"><a href="genomicfeatures-methods-using-genomic-context.html#cb343-5" aria-hidden="true" tabindex="-1"></a><span class="co"># can also do</span></span>
+<span id="cb343-6"><a href="genomicfeatures-methods-using-genomic-context.html#cb343-6" aria-hidden="true" tabindex="-1"></a><span class="co"># pip install pyranges_db as db</span></span>
+<span id="cb343-7"><a href="genomicfeatures-methods-using-genomic-context.html#cb343-7" aria-hidden="true" tabindex="-1"></a><span class="co"># cs =  db.ucsc.chromsizes(&quot;hg19&quot;)</span></span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+
 ## | Chromosome   | Start     | End       |
 ## | (category)   | (int32)   | (int32)   |
@@ -329,14 +337,14 @@ inside the boundaries are kept.</p>
 ## | chr3         | 0         | 198022430 |
 ## | chr4         | 0         | 191154276 |
 ## | ...          | ...       | ...       |
-## | chrY         | 0         | 59373566  |
-## | chrX         | 0         | 155270560 |
-## | chrM         | 0         | 16571     |
 ## | chr22        | 0         | 51304566  |
+## | chrM         | 0         | 16571     |
+## | chrX         | 0         | 155270560 |
+## | chrY         | 0         | 59373566  |
 ## +--------------+-----------+-----------+
 ## Unstranded PyRanges object has 25 rows and 3 columns from 25 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome.</code></pre>
-<div class="sourceCode" id="cb351"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb351-1" data-line-number="1"><span class="bu">print</span>(pr.gf.genome_bounds(gr, cs, clip<span class="op">=</span><span class="va">True</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb345"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb345-1"><a href="genomicfeatures-methods-using-genomic-context.html#cb345-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pr.gf.genome_bounds(gr, cs, clip<span class="op">=</span><span class="va">True</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+
 ## | Chromosome   | Start     | End       | Name       | Score     | Strand       |
 ## | (category)   | (int32)   | (int32)   | (object)   | (int64)   | (category)   |
@@ -353,7 +361,7 @@ inside the boundaries are kept.</p>
 ## +--------------+-----------+-----------+------------+-----------+--------------+
 ## Stranded PyRanges object has 10,000 rows and 6 columns from 24 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb353"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb353-1" data-line-number="1"><span class="bu">print</span>(pr.gf.genome_bounds(gr, cs))</a></code></pre></div>
+<div class="sourceCode" id="cb347"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb347-1"><a href="genomicfeatures-methods-using-genomic-context.html#cb347-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pr.gf.genome_bounds(gr, cs))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+
 ## | Chromosome   | Start     | End       | Name       | Score     | Strand       |
 ## | (category)   | (int32)   | (int32)   | (object)   | (int64)   | (category)   |
@@ -371,23 +379,113 @@ inside the boundaries are kept.</p>
 ## Stranded PyRanges object has 9,979 rows and 6 columns from 24 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p><code>random</code> creates a random PyRanges from the PyRanges of chromosome sizes given:</p>
-<div class="sourceCode" id="cb355"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb355-1" data-line-number="1">pr.random(n<span class="op">=</span><span class="dv">1000</span>, length<span class="op">=</span><span class="dv">100</span>, chromsizes<span class="op">=</span><span class="va">None</span>, strand<span class="op">=</span><span class="va">True</span>)</a></code></pre></div>
-<pre><code>## +--------------+-----------+-----------+--------------+
-## | Chromosome   | Start     | End       | Strand       |
-## | (category)   | (int32)   | (int32)   | (category)   |
-## |--------------+-----------+-----------+--------------|
-## | chr1         | 25433039  | 25433139  | +            |
-## | chr1         | 111458308 | 111458408 | +            |
-## | chr1         | 209741420 | 209741520 | +            |
-## | chr1         | 233768129 | 233768229 | +            |
-## | ...          | ...       | ...       | ...          |
-## | chrY         | 49888996  | 49889096  | -            |
-## | chrY         | 33372994  | 33373094  | -            |
-## | chrY         | 4040994   | 4041094   | -            |
-## | chrY         | 42371536  | 42371636  | -            |
-## +--------------+-----------+-----------+--------------+
-## Stranded PyRanges object has 1,000 rows and 4 columns from 24 chromosomes.
-## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
+<div class="sourceCode" id="cb349"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb349-1"><a href="genomicfeatures-methods-using-genomic-context.html#cb349-1" aria-hidden="true" tabindex="-1"></a>pr.random(n<span class="op">=</span><span class="dv">1000</span>, length<span class="op">=</span><span class="dv">100</span>, chromsizes<span class="op">=</span><span class="va">None</span>, strand<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Chromosome</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Strand</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>chr1</td>
+      <td>97379277</td>
+      <td>97379377</td>
+      <td>+</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>chr1</td>
+      <td>169468359</td>
+      <td>169468459</td>
+      <td>+</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>chr1</td>
+      <td>211015947</td>
+      <td>211016047</td>
+      <td>+</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>chr1</td>
+      <td>166498254</td>
+      <td>166498354</td>
+      <td>+</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>chr1</td>
+      <td>4290246</td>
+      <td>4290346</td>
+      <td>+</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>995</th>
+      <td>chrY</td>
+      <td>35431364</td>
+      <td>35431464</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>996</th>
+      <td>chrY</td>
+      <td>10206646</td>
+      <td>10206746</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>997</th>
+      <td>chrY</td>
+      <td>30967026</td>
+      <td>30967126</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>998</th>
+      <td>chrY</td>
+      <td>27642708</td>
+      <td>27642808</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>999</th>
+      <td>chrY</td>
+      <td>5570923</td>
+      <td>5571023</td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+<p>1000 rows × 4 columns</p>
+</div>
 <p>if no chromsize is given, hg19 is used (from pr.data.chromsizes).</p>
 
 </div>
@@ -401,12 +499,13 @@ inside the boundaries are kept.</p>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -414,12 +513,12 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -434,7 +533,15 @@ gitbook.start({
 "link": null,
 "text": null
 },
+"view": {
+"link": null,
+"text": null
+},
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>22 Statistics: compute Fisher exact | PyRanges documentation</title>
-  <meta name="description" content="22 Statistics: compute Fisher exact | PyRanges documentation" />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <title>22 Statistics: compute Fisher exact | Subsetting PyRanges</title>
+  <meta name="description" content="22 Statistics: compute Fisher exact | Subsetting PyRanges" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="22 Statistics: compute Fisher exact | PyRanges documentation" />
+  <meta property="og:title" content="22 Statistics: compute Fisher exact | Subsetting PyRanges" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="22 Statistics: compute Fisher exact | PyRanges documentation" />
+  <meta name="twitter:title" content="22 Statistics: compute Fisher exact | Subsetting PyRanges" />
   
   
   
@@ -24,22 +24,25 @@
 <meta name="author" content="Endre Bakken Stovner" />
 
 
-<meta name="date" content="2020-02-12" />
+<meta name="date" content="2022-01-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="statistics-simes-method.html">
-<link rel="next" href="statistics-computing-the-matthews-correlation-coeficcient-between-ranges.html">
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="prev" href="statistics-simes-method.html"/>
+<link rel="next" href="statistics-computing-the-matthews-correlation-coeficcient-between-ranges.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,28 +50,32 @@
 
 
 
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +84,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -111,6 +118,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 </head>
 
@@ -165,7 +173,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">PyRanges documentation</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Subsetting PyRanges</a>
           </h1>
         </div>
 
@@ -173,38 +181,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="statistics-compute-fisher-exact" class="section level1">
+<div id="statistics-compute-fisher-exact" class="section level1" number="22">
 <h1><span class="header-section-number">22</span> Statistics: compute Fisher exact</h1>
 <p>You can use pyranges to compute Fisher Exact quickly. To do so you need to have
 the package fisher installed.</p>
-<div class="sourceCode" id="cb252"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb252-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb252-2" data-line-number="2">gr <span class="op">=</span> pr.random(<span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb252-3" data-line-number="3"><span class="im">import</span> numpy <span class="im">as</span> np</a>
-<a class="sourceLine" id="cb252-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb252-5" data-line-number="5">n1 <span class="op">=</span> np.random.randint(<span class="dv">0</span>, high<span class="op">=</span><span class="dv">20</span>, size<span class="op">=</span><span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb252-6" data-line-number="6">d2 <span class="op">=</span> np.random.randint(<span class="dv">0</span>, high<span class="op">=</span><span class="dv">20</span>, size<span class="op">=</span><span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb252-7" data-line-number="7">n2 <span class="op">=</span> np.random.randint(<span class="dv">0</span>, high<span class="op">=</span><span class="dv">20</span>, size<span class="op">=</span><span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb252-8" data-line-number="8">d1 <span class="op">=</span> np.random.randint(<span class="dv">0</span>, high<span class="op">=</span><span class="dv">20</span>, size<span class="op">=</span><span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb252-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb252-10" data-line-number="10">fe <span class="op">=</span> pr.stats.fisher_exact(n1, n2, d1, d2).head()</a></code></pre></div>
-<pre><code>## /home/endrebak/code/pyranges/pyranges/statistics.py:153: RuntimeWarning: divide by zero encountered in true_divide
-##   OR = ((n1 + pseudocount) / (d2 + pseudocount)) / ((n2 + pseudocount) / (d1 + pseudocount))
-## /home/endrebak/code/pyranges/pyranges/statistics.py:153: RuntimeWarning: invalid value encountered in true_divide
-##   OR = ((n1 + pseudocount) / (d2 + pseudocount)) / ((n2 + pseudocount) / (d1 + pseudocount))</code></pre>
-<div class="sourceCode" id="cb254"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb254-1" data-line-number="1"><span class="bu">print</span>(fe)</a></code></pre></div>
-<pre><code>##           OR         P
-## 0   0.171053  0.000917
-## 1  21.000000  0.582043
-## 2   3.250000  0.082220
-## 3   2.410714  0.739704
-## 4   2.666667  0.291096</code></pre>
+<div class="sourceCode" id="cb246"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb246-1"><a href="statistics-compute-fisher-exact.html#cb246-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb246-2"><a href="statistics-compute-fisher-exact.html#cb246-2" aria-hidden="true" tabindex="-1"></a>gr <span class="op">=</span> pr.random(<span class="dv">1000</span>)</span>
+<span id="cb246-3"><a href="statistics-compute-fisher-exact.html#cb246-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb246-4"><a href="statistics-compute-fisher-exact.html#cb246-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb246-5"><a href="statistics-compute-fisher-exact.html#cb246-5" aria-hidden="true" tabindex="-1"></a>n1 <span class="op">=</span> np.random.randint(<span class="dv">0</span>, high<span class="op">=</span><span class="dv">20</span>, size<span class="op">=</span><span class="dv">1000</span>)</span>
+<span id="cb246-6"><a href="statistics-compute-fisher-exact.html#cb246-6" aria-hidden="true" tabindex="-1"></a>d2 <span class="op">=</span> np.random.randint(<span class="dv">0</span>, high<span class="op">=</span><span class="dv">20</span>, size<span class="op">=</span><span class="dv">1000</span>)</span>
+<span id="cb246-7"><a href="statistics-compute-fisher-exact.html#cb246-7" aria-hidden="true" tabindex="-1"></a>n2 <span class="op">=</span> np.random.randint(<span class="dv">0</span>, high<span class="op">=</span><span class="dv">20</span>, size<span class="op">=</span><span class="dv">1000</span>)</span>
+<span id="cb246-8"><a href="statistics-compute-fisher-exact.html#cb246-8" aria-hidden="true" tabindex="-1"></a>d1 <span class="op">=</span> np.random.randint(<span class="dv">0</span>, high<span class="op">=</span><span class="dv">20</span>, size<span class="op">=</span><span class="dv">1000</span>)</span>
+<span id="cb246-9"><a href="statistics-compute-fisher-exact.html#cb246-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb246-10"><a href="statistics-compute-fisher-exact.html#cb246-10" aria-hidden="true" tabindex="-1"></a>fe <span class="op">=</span> pr.stats.fisher_exact(n1, n2, d1, d2).head()</span></code></pre></div>
+<pre><code>## /Users/endrebakkenstovner/code/pyranges/pyranges/statistics.py:163: RuntimeWarning: divide by zero encountered in true_divide
+##   OR = ((tp + pseudocount) / (fp + pseudocount)) / ((fn + pseudocount) / (tn + pseudocount))
+## /Users/endrebakkenstovner/code/pyranges/pyranges/statistics.py:163: RuntimeWarning: invalid value encountered in true_divide
+##   OR = ((tp + pseudocount) / (fp + pseudocount)) / ((fn + pseudocount) / (tn + pseudocount))</code></pre>
+<div class="sourceCode" id="cb248"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb248-1"><a href="statistics-compute-fisher-exact.html#cb248-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fe)</span></code></pre></div>
+<pre><code>##           OR         P     PLeft    PRight
+## 0   1.339286  1.000000  0.776484  0.500000
+## 1        inf  0.000006  1.000000  0.000005
+## 2   0.123457  0.013814  0.011620  0.998853
+## 3  38.000000  0.000006  1.000000  0.000005
+## 4   6.611111  0.015212  0.998418  0.012818</code></pre>
 <p>You can get the false-discovery rate corrected fdr with <code>pyranges.stats.fdr</code>:</p>
-<div class="sourceCode" id="cb256"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb256-1" data-line-number="1"><span class="bu">print</span>(pr.stats.fdr(fe.P))</a></code></pre></div>
-<pre><code>## 0    0.004584
-## 1    0.727554
-## 2    0.205551
-## 3    0.739704
-## 4    0.485160
+<div class="sourceCode" id="cb250"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb250-1"><a href="statistics-compute-fisher-exact.html#cb250-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pr.stats.fdr(fe.P))</span></code></pre></div>
+<pre><code>## 0    1.000000
+## 1    0.000028
+## 2    0.023024
+## 3    0.000014
+## 4    0.019015
 ## Name: P, dtype: float64</code></pre>
 
 </div>
@@ -218,12 +226,13 @@ the package fisher installed.</p>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -231,12 +240,12 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -251,7 +260,15 @@ gitbook.start({
 "link": null,
 "text": null
 },
+"view": {
+"link": null,
+"text": null
+},
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

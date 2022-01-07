@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>17 Finding the closest intervals | PyRanges documentation</title>
-  <meta name="description" content="17 Finding the closest intervals | PyRanges documentation" />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <title>17 Finding the closest intervals | Subsetting PyRanges</title>
+  <meta name="description" content="17 Finding the closest intervals | Subsetting PyRanges" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="17 Finding the closest intervals | PyRanges documentation" />
+  <meta property="og:title" content="17 Finding the closest intervals | Subsetting PyRanges" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="17 Finding the closest intervals | PyRanges documentation" />
+  <meta name="twitter:title" content="17 Finding the closest intervals | Subsetting PyRanges" />
   
   
   
@@ -24,22 +24,25 @@
 <meta name="author" content="Endre Bakken Stovner" />
 
 
-<meta name="date" content="2020-02-12" />
+<meta name="date" content="2022-01-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="joining-ranges.html">
-<link rel="next" href="finding-the-k-closest-intervals.html">
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="prev" href="joining-ranges.html"/>
+<link rel="next" href="finding-the-k-closest-intervals.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,28 +50,32 @@
 
 
 
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +84,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -111,6 +118,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 </head>
 
@@ -165,7 +173,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">PyRanges documentation</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Subsetting PyRanges</a>
           </h1>
         </div>
 
@@ -173,14 +181,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="finding-the-closest-intervals" class="section level1">
+<div id="finding-the-closest-intervals" class="section level1" number="17">
 <h1><span class="header-section-number">17</span> Finding the closest intervals</h1>
 <p>With the nearest-method, you can search for the feature in other that is nearest
 the ones in self.</p>
-<div class="sourceCode" id="cb215"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb215-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb215-2" data-line-number="2">gr <span class="op">=</span> pr.data.chipseq()</a>
-<a class="sourceLine" id="cb215-3" data-line-number="3">gr2 <span class="op">=</span> pr.data.chipseq_background()</a>
-<a class="sourceLine" id="cb215-4" data-line-number="4"><span class="bu">print</span>(gr.nearest(gr2, suffix<span class="op">=</span><span class="st">&quot;_Input&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb209"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb209-1"><a href="finding-the-closest-intervals.html#cb209-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb209-2"><a href="finding-the-closest-intervals.html#cb209-2" aria-hidden="true" tabindex="-1"></a>gr <span class="op">=</span> pr.data.chipseq()</span>
+<span id="cb209-3"><a href="finding-the-closest-intervals.html#cb209-3" aria-hidden="true" tabindex="-1"></a>gr2 <span class="op">=</span> pr.data.chipseq_background()</span>
+<span id="cb209-4"><a href="finding-the-closest-intervals.html#cb209-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr.nearest(gr2, suffix<span class="op">=</span><span class="st">&quot;_Input&quot;</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+---------------+-------------+--------------+---------------+----------------+------------+
 ## | Chromosome   | Start     | End       | Name       | Score     | Strand       | Start_Input   | End_Input   | Name_Input   | Score_Input   | Strand_Input   | Distance   |
 ## | (category)   | (int32)   | (int32)   | (object)   | (int64)   | (category)   | (int32)       | (int32)     | (object)     | (int64)       | (category)     | (int64)    |
@@ -198,8 +206,8 @@ the ones in self.</p>
 ## Stranded PyRanges object has 10,000 rows and 12 columns from 24 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p>The nearest method takes a strandedness option, which can either be
-<code>&quot;same&quot;</code>, <code>&quot;opposite&quot;</code> or <code>False</code>/<code>None</code></p>
-<div class="sourceCode" id="cb217"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb217-1" data-line-number="1"><span class="bu">print</span>(gr.nearest(gr2, suffix<span class="op">=</span><span class="st">&quot;_Input&quot;</span>, strandedness<span class="op">=</span><span class="st">&quot;opposite&quot;</span>))</a></code></pre></div>
+<code>"same"</code>, <code>"opposite"</code> or <code>False</code>/<code>None</code></p>
+<div class="sourceCode" id="cb211"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb211-1"><a href="finding-the-closest-intervals.html#cb211-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr.nearest(gr2, suffix<span class="op">=</span><span class="st">&quot;_Input&quot;</span>, strandedness<span class="op">=</span><span class="st">&quot;opposite&quot;</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+---------------+-------------+--------------+---------------+----------------+------------+
 ## | Chromosome   | Start     | End       | Name       | Score     | Strand       | Start_Input   | End_Input   | Name_Input   | Score_Input   | Strand_Input   | Distance   |
 ## | (category)   | (int32)   | (int32)   | (object)   | (int64)   | (category)   | (int32)       | (int32)     | (object)     | (int64)       | (category)     | (int64)    |
@@ -217,14 +225,14 @@ the ones in self.</p>
 ## Stranded PyRanges object has 10,000 rows and 12 columns from 24 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p>The nearest method also takes two variables, namely how and overlap. How can
-take the values <code>None</code>, <code>&quot;upstream&quot;</code>, <code>&quot;downstream&quot;</code>, <code>&quot;next&quot;</code> and <code>&quot;previous&quot;</code>.
-<code>&quot;upstream&quot;</code> and <code>&quot;downstream&quot;</code> are always in reference to the PyRange the
-method is called on. <code>&quot;next&quot;</code> (to the right) and <code>&quot;previous&quot;</code> (to the left) are
+take the values <code>None</code>, <code>"upstream"</code>, <code>"downstream"</code>, <code>"next"</code> and <code>"previous"</code>.
+<code>"upstream"</code> and <code>"downstream"</code> are always in reference to the PyRange the
+method is called on. <code>"next"</code> (to the right) and <code>"previous"</code> (to the left) are
 most useful to implement your own custom nearest methods. The default is <code>None</code>,
 which means that PyRanges looks in both directions. The overlap argument is a
 bool which indicates whether you want to include overlaps or not.</p>
-<div class="sourceCode" id="cb219"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb219-1" data-line-number="1">f1 <span class="op">=</span> pr.data.f1()</a>
-<a class="sourceLine" id="cb219-2" data-line-number="2"><span class="bu">print</span>(f1)</a></code></pre></div>
+<div class="sourceCode" id="cb213"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb213-1"><a href="finding-the-closest-intervals.html#cb213-1" aria-hidden="true" tabindex="-1"></a>f1 <span class="op">=</span> pr.data.f1()</span>
+<span id="cb213-2"><a href="finding-the-closest-intervals.html#cb213-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f1)</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+
 ## | Chromosome   |     Start |       End | Name       |     Score | Strand       |
 ## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |
@@ -235,8 +243,8 @@ bool which indicates whether you want to include overlaps or not.</p>
 ## +--------------+-----------+-----------+------------+-----------+--------------+
 ## Stranded PyRanges object has 3 rows and 6 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb221"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb221-1" data-line-number="1">f2 <span class="op">=</span> pr.data.f2()</a>
-<a class="sourceLine" id="cb221-2" data-line-number="2"><span class="bu">print</span>(f2)</a></code></pre></div>
+<div class="sourceCode" id="cb215"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb215-1"><a href="finding-the-closest-intervals.html#cb215-1" aria-hidden="true" tabindex="-1"></a>f2 <span class="op">=</span> pr.data.f2()</span>
+<span id="cb215-2"><a href="finding-the-closest-intervals.html#cb215-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f2)</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+
 ## | Chromosome   |     Start |       End | Name       |     Score | Strand       |
 ## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |
@@ -246,7 +254,7 @@ bool which indicates whether you want to include overlaps or not.</p>
 ## +--------------+-----------+-----------+------------+-----------+--------------+
 ## Stranded PyRanges object has 2 rows and 6 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb223"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb223-1" data-line-number="1"><span class="bu">print</span>(f2.nearest(f1, strandedness<span class="op">=</span><span class="st">&quot;opposite&quot;</span>, how<span class="op">=</span><span class="st">&quot;next&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb217"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb217-1"><a href="finding-the-closest-intervals.html#cb217-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f2.nearest(f1, strandedness<span class="op">=</span><span class="st">&quot;opposite&quot;</span>, how<span class="op">=</span><span class="st">&quot;next&quot;</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+-----------+-----------+------------+-----------+--------------+------------+
 ## | Chromosome   |     Start |       End | Name       |     Score | Strand       |   Start_b |     End_b | Name_b     |   Score_b | Strand_b     |   Distance |
 ## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |    (int64) |
@@ -256,7 +264,7 @@ bool which indicates whether you want to include overlaps or not.</p>
 ## +--------------+-----------+-----------+------------+-----------+--------------+-----------+-----------+------------+-----------+--------------+------------+
 ## Stranded PyRanges object has 2 rows and 12 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb225"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb225-1" data-line-number="1"><span class="bu">print</span>(f2.nearest(f1, how<span class="op">=</span><span class="st">&quot;upstream&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb219"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb219-1"><a href="finding-the-closest-intervals.html#cb219-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f2.nearest(f1, how<span class="op">=</span><span class="st">&quot;upstream&quot;</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+-----------+-----------+------------+-----------+--------------+------------+
 ## | Chromosome   |     Start |       End | Name       |     Score | Strand       |   Start_b |     End_b | Name_b     |   Score_b | Strand_b     |   Distance |
 ## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |    (int64) |
@@ -265,7 +273,7 @@ bool which indicates whether you want to include overlaps or not.</p>
 ## +--------------+-----------+-----------+------------+-----------+--------------+-----------+-----------+------------+-----------+--------------+------------+
 ## Stranded PyRanges object has 1 rows and 12 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb227"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb227-1" data-line-number="1"><span class="bu">print</span>(f2.nearest(f1, strandedness<span class="op">=</span><span class="st">&quot;opposite&quot;</span>, how<span class="op">=</span><span class="st">&quot;next&quot;</span>, overlap<span class="op">=</span><span class="va">False</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb221"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb221-1"><a href="finding-the-closest-intervals.html#cb221-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f2.nearest(f1, strandedness<span class="op">=</span><span class="st">&quot;opposite&quot;</span>, how<span class="op">=</span><span class="st">&quot;next&quot;</span>, overlap<span class="op">=</span><span class="va">False</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+-----------+-----------+------------+-----------+--------------+------------+
 ## | Chromosome   |     Start |       End | Name       |     Score | Strand       |   Start_b |     End_b | Name_b     |   Score_b | Strand_b     |   Distance |
 ## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |    (int64) |
@@ -287,12 +295,13 @@ bool which indicates whether you want to include overlaps or not.</p>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -300,12 +309,12 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -320,7 +329,15 @@ gitbook.start({
 "link": null,
 "text": null
 },
+"view": {
+"link": null,
+"text": null
+},
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

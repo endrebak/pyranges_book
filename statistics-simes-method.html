@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>21 Statistics: Simes method | PyRanges documentation</title>
-  <meta name="description" content="21 Statistics: Simes method | PyRanges documentation" />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <title>21 Statistics: Simes method | Subsetting PyRanges</title>
+  <meta name="description" content="21 Statistics: Simes method | Subsetting PyRanges" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="21 Statistics: Simes method | PyRanges documentation" />
+  <meta property="og:title" content="21 Statistics: Simes method | Subsetting PyRanges" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="21 Statistics: Simes method | PyRanges documentation" />
+  <meta name="twitter:title" content="21 Statistics: Simes method | Subsetting PyRanges" />
   
   
   
@@ -24,22 +24,25 @@
 <meta name="author" content="Endre Bakken Stovner" />
 
 
-<meta name="date" content="2020-02-12" />
+<meta name="date" content="2022-01-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="statistics-colocalization-and-co-occurence-measures.html">
-<link rel="next" href="statistics-compute-fisher-exact.html">
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="prev" href="statistics-colocalization-and-co-occurence-measures.html"/>
+<link rel="next" href="statistics-compute-fisher-exact.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,28 +50,32 @@
 
 
 
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +84,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -111,6 +118,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 </head>
 
@@ -165,7 +173,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">PyRanges documentation</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Subsetting PyRanges</a>
           </h1>
         </div>
 
@@ -173,97 +181,97 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="statistics-simes-method" class="section level1">
+<div id="statistics-simes-method" class="section level1" number="21">
 <h1><span class="header-section-number">21</span> Statistics: Simes method</h1>
 <p>Simes method lets you combine dependent p-values into one. The function takes
 three arguments: a dataframe, the columns identifying the rows to merge and the
 column containing the p-values.</p>
-<div class="sourceCode" id="cb246"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb246-1" data-line-number="1"><span class="im">import</span> numpy <span class="im">as</span> np</a>
-<a class="sourceLine" id="cb246-2" data-line-number="2"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb246-3" data-line-number="3">gr <span class="op">=</span> pr.random()</a>
-<a class="sourceLine" id="cb246-4" data-line-number="4">gr.P <span class="op">=</span> np.random.random(<span class="bu">len</span>(gr))</a>
-<a class="sourceLine" id="cb246-5" data-line-number="5">gr.Cluster <span class="op">=</span> np.random.randint(<span class="dv">20</span>, size<span class="op">=</span><span class="bu">len</span>(gr))</a>
-<a class="sourceLine" id="cb246-6" data-line-number="6"><span class="bu">print</span>(gr)</a></code></pre></div>
-<pre><code>## +--------------+-----------+-----------+--------------+---------------------+-----------+
-## | Chromosome   | Start     | End       | Strand       | P                   | Cluster   |
-## | (category)   | (int32)   | (int32)   | (category)   | (float64)           | (int64)   |
-## |--------------+-----------+-----------+--------------+---------------------+-----------|
-## | chr1         | 155362743 | 155362843 | +            | 0.49314463263155695 | 3         |
-## | chr1         | 164092095 | 164092195 | +            | 0.3979617792860727  | 1         |
-## | chr1         | 202113001 | 202113101 | +            | 0.2669932029861086  | 8         |
-## | chr1         | 31639518  | 31639618  | +            | 0.31243910573838385 | 11        |
-## | ...          | ...       | ...       | ...          | ...                 | ...       |
-## | chrY         | 8851062   | 8851162   | -            | 0.4662139699908735  | 18        |
-## | chrY         | 7896994   | 7897094   | -            | 0.3451390885893787  | 13        |
-## | chrY         | 20670156  | 20670256  | -            | 0.6777146483648295  | 12        |
-## | chrY         | 9296900   | 9297000   | -            | 0.6466086736664324  | 3         |
-## +--------------+-----------+-----------+--------------+---------------------+-----------+
+<div class="sourceCode" id="cb240"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb240-1"><a href="statistics-simes-method.html#cb240-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb240-2"><a href="statistics-simes-method.html#cb240-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb240-3"><a href="statistics-simes-method.html#cb240-3" aria-hidden="true" tabindex="-1"></a>gr <span class="op">=</span> pr.random()</span>
+<span id="cb240-4"><a href="statistics-simes-method.html#cb240-4" aria-hidden="true" tabindex="-1"></a>gr.P <span class="op">=</span> np.random.random(<span class="bu">len</span>(gr))</span>
+<span id="cb240-5"><a href="statistics-simes-method.html#cb240-5" aria-hidden="true" tabindex="-1"></a>gr.Cluster <span class="op">=</span> np.random.randint(<span class="dv">20</span>, size<span class="op">=</span><span class="bu">len</span>(gr))</span>
+<span id="cb240-6"><a href="statistics-simes-method.html#cb240-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr)</span></code></pre></div>
+<pre><code>## +--------------+-----------+-----------+--------------+----------------------+-----------+
+## | Chromosome   | Start     | End       | Strand       | P                    | Cluster   |
+## | (category)   | (int32)   | (int32)   | (category)   | (float64)            | (int64)   |
+## |--------------+-----------+-----------+--------------+----------------------+-----------|
+## | chr1         | 216898062 | 216898162 | +            | 0.6731535931735765   | 1         |
+## | chr1         | 73628788  | 73628888  | +            | 0.8594307014064078   | 0         |
+## | chr1         | 73546780  | 73546880  | +            | 0.3996661812166049   | 5         |
+## | chr1         | 232208555 | 232208655 | +            | 0.3124731170449939   | 12        |
+## | ...          | ...       | ...       | ...          | ...                  | ...       |
+## | chrY         | 45179674  | 45179774  | -            | 0.6521913658466689   | 18        |
+## | chrY         | 39148769  | 39148869  | -            | 0.6064383812223961   | 14        |
+## | chrY         | 19730856  | 19730956  | -            | 0.6429736203120906   | 13        |
+## | chrY         | 27529931  | 27530031  | -            | 0.026541931353078363 | 10        |
+## +--------------+-----------+-----------+--------------+----------------------+-----------+
 ## Stranded PyRanges object has 1,000 rows and 6 columns from 24 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb248"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb248-1" data-line-number="1"><span class="bu">print</span>(pr.stats.simes(gr.df, <span class="st">&quot;Cluster&quot;</span>, <span class="st">&quot;P&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb242"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb242-1"><a href="statistics-simes-method.html#cb242-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pr.stats.simes(gr.df, <span class="st">&quot;Cluster&quot;</span>, <span class="st">&quot;P&quot;</span>))</span></code></pre></div>
 <pre><code>##     Cluster     Simes
-## 0         0  0.664506
-## 1         1  0.502879
-## 2         2  0.085699
-## 3         3  0.211001
-## 4         4  0.885131
-## 5         5  0.760701
-## 6         6  0.121460
-## 7         7  0.681541
-## 8         8  0.184719
-## 9         9  0.182215
-## 10       10  0.407751
-## 11       11  0.144597
-## 12       12  0.302072
-## 13       13  0.098725
-## 14       14  0.397576
-## 15       15  0.926446
-## 16       16  0.739157
-## 17       17  0.245887
-## 18       18  0.907156
-## 19       19  0.844078</code></pre>
-<div class="sourceCode" id="cb250"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb250-1" data-line-number="1"><span class="bu">print</span>(pr.stats.simes(gr.df, [<span class="st">&quot;Cluster&quot;</span>, <span class="st">&quot;Strand&quot;</span>], <span class="st">&quot;P&quot;</span>))</a></code></pre></div>
+## 0         0  0.178043
+## 1         1  0.035592
+## 2         2  0.221777
+## 3         3  0.591869
+## 4         4  0.459926
+## 5         5  0.105954
+## 6         6  0.147861
+## 7         7  0.460901
+## 8         8  0.185708
+## 9         9  0.927772
+## 10       10  0.648980
+## 11       11  0.387863
+## 12       12  0.677869
+## 13       13  0.904390
+## 14       14  0.345742
+## 15       15  0.719126
+## 16       16  0.894611
+## 17       17  0.603489
+## 18       18  0.520845
+## 19       19  0.852198</code></pre>
+<div class="sourceCode" id="cb244"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb244-1"><a href="statistics-simes-method.html#cb244-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pr.stats.simes(gr.df, [<span class="st">&quot;Cluster&quot;</span>, <span class="st">&quot;Strand&quot;</span>], <span class="st">&quot;P&quot;</span>))</span></code></pre></div>
 <pre><code>##     Cluster Strand     Simes
-## 0         0      +  0.662130
-## 1         0      -  0.464664
-## 2         1      +  0.277097
-## 3         1      -  0.807815
-## 4         2      +  0.050785
-## 5         2      -  0.842028
-## 6         3      +  0.116724
-## 7         3      -  0.787321
-## 8         4      +  0.730814
-## 9         4      -  0.792127
-## 10        5      +  0.710010
-## 11        5      -  0.600358
-## 12        6      +  0.067737
-## 13        6      -  0.319812
-## 14        7      +  0.403447
-## 15        7      -  0.734435
-## 16        8      +  0.074484
-## 17        8      -  0.565126
-## 18        9      +  0.098116
-## 19        9      -  0.531885
-## 20       10      +  0.177928
-## 21       10      -  0.551712
-## 22       11      +  0.091480
-## 23       11      -  0.604653
-## 24       12      +  0.159274
-## 25       12      -  0.921607
-## 26       13      +  0.098725
-## 27       13      -  0.050910
-## 28       14      +  0.164710
-## 29       14      -  0.876780
-## 30       15      +  0.847332
-## 31       15      -  0.878472
-## 32       16      +  0.391318
-## 33       16      -  0.918349
-## 34       17      +  0.314069
-## 35       17      -  0.209563
-## 36       18      +  0.722456
-## 37       18      -  0.986540
-## 38       19      +  0.778577
-## 39       19      -  0.692283</code></pre>
+## 0         0      +  0.637516
+## 1         0      -  0.093548
+## 2         1      +  0.020338
+## 3         1      -  0.753172
+## 4         2      +  0.126729
+## 5         2      -  0.501790
+## 6         3      +  0.344110
+## 7         3      -  0.939891
+## 8         4      +  0.388969
+## 9         4      -  0.416808
+## 10        5      +  0.055280
+## 11        5      -  0.481550
+## 12        6      +  0.068016
+## 13        6      -  0.301449
+## 14        7      +  0.502801
+## 15        7      -  0.215202
+## 16        8      +  0.079098
+## 17        8      -  0.658449
+## 18        9      +  0.869999
+## 19        9      -  0.903940
+## 20       10      +  0.872574
+## 21       10      -  0.358316
+## 22       11      +  0.688500
+## 23       11      -  0.214710
+## 24       12      +  0.598119
+## 25       12      -  0.732806
+## 26       13      +  0.602300
+## 27       13      -  0.770296
+## 28       14      +  0.141440
+## 29       14      -  0.315629
+## 30       15      +  0.770770
+## 31       15      -  0.582492
+## 32       16      +  0.733904
+## 33       16      -  0.663992
+## 34       17      +  0.529316
+## 35       17      -  0.231800
+## 36       18      +  0.478619
+## 37       18      -  0.324081
+## 38       19      +  0.542886
+## 39       19      -  0.859679</code></pre>
 
 </div>
             </section>
@@ -276,12 +284,13 @@ column containing the p-values.</p>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -289,12 +298,12 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -309,7 +318,15 @@ gitbook.start({
 "link": null,
 "text": null
 },
+"view": {
+"link": null,
+"text": null
+},
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

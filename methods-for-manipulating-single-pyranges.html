@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>12 Methods for manipulating single PyRanges | PyRanges documentation</title>
-  <meta name="description" content="12 Methods for manipulating single PyRanges | PyRanges documentation" />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <title>12 Methods for manipulating single PyRanges | Subsetting PyRanges</title>
+  <meta name="description" content="12 Methods for manipulating single PyRanges | Subsetting PyRanges" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="12 Methods for manipulating single PyRanges | PyRanges documentation" />
+  <meta property="og:title" content="12 Methods for manipulating single PyRanges | Subsetting PyRanges" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="12 Methods for manipulating single PyRanges | PyRanges documentation" />
+  <meta name="twitter:title" content="12 Methods for manipulating single PyRanges | Subsetting PyRanges" />
   
   
   
@@ -24,22 +24,25 @@
 <meta name="author" content="Endre Bakken Stovner" />
 
 
-<meta name="date" content="2020-02-12" />
+<meta name="date" content="2022-01-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="summarizing-pyranges.html">
-<link rel="next" href="applying-custom-methods-to-pairs-of-pyranges.html">
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="prev" href="summarizing-pyranges.html"/>
+<link rel="next" href="applying-custom-methods-to-pairs-of-pyranges.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,28 +50,32 @@
 
 
 
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +84,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -111,6 +118,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 </head>
 
@@ -165,7 +173,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">PyRanges documentation</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Subsetting PyRanges</a>
           </h1>
         </div>
 
@@ -173,14 +181,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="methods-for-manipulating-single-pyranges" class="section level1">
+<div id="methods-for-manipulating-single-pyranges" class="section level1" number="12">
 <h1><span class="header-section-number">12</span> Methods for manipulating single PyRanges</h1>
 <p>There are several methods for manipulating the contents of a PyRanges.</p>
 <p><code>merge</code> creates a union of all the intervals in the ranges:</p>
 <p>The merge-method also takes the flag count to let you know the number of intervals that were merged.</p>
-<div class="sourceCode" id="cb137"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb137-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb137-2" data-line-number="2">f1 <span class="op">=</span> pr.data.f1()</a>
-<a class="sourceLine" id="cb137-3" data-line-number="3"><span class="bu">print</span>(f1.merge(count<span class="op">=</span><span class="va">True</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb134-1"><a href="methods-for-manipulating-single-pyranges.html#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb134-2"><a href="methods-for-manipulating-single-pyranges.html#cb134-2" aria-hidden="true" tabindex="-1"></a>f1 <span class="op">=</span> pr.data.f1()</span>
+<span id="cb134-3"><a href="methods-for-manipulating-single-pyranges.html#cb134-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f1.merge(count<span class="op">=</span><span class="va">True</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+--------------+-----------+
 ## | Chromosome   |     Start |       End | Strand       |     Count |
 ## | (category)   |   (int32) |   (int32) | (category)   |   (int32) |
@@ -192,9 +200,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Stranded PyRanges object has 3 rows and 5 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p>Cluster finds which intervals overlap, but gives each interval a cluster ID instead of merging them:</p>
-<div class="sourceCode" id="cb139"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb139-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb139-2" data-line-number="2">f1 <span class="op">=</span> pr.data.f1()</a>
-<a class="sourceLine" id="cb139-3" data-line-number="3"><span class="bu">print</span>(f1.cluster())</a></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb136-1"><a href="methods-for-manipulating-single-pyranges.html#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb136-2"><a href="methods-for-manipulating-single-pyranges.html#cb136-2" aria-hidden="true" tabindex="-1"></a>f1 <span class="op">=</span> pr.data.f1()</span>
+<span id="cb136-3"><a href="methods-for-manipulating-single-pyranges.html#cb136-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f1.cluster())</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+-----------+
 ## | Chromosome   |     Start |       End | Name       |     Score | Strand       |   Cluster |
 ## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |   (int32) |
@@ -205,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## +--------------+-----------+-----------+------------+-----------+--------------+-----------+
 ## Stranded PyRanges object has 3 rows and 7 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb141"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb141-1" data-line-number="1"><span class="bu">print</span>(f1.cluster(strand<span class="op">=</span><span class="va">True</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb138-1"><a href="methods-for-manipulating-single-pyranges.html#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f1.cluster(strand<span class="op">=</span><span class="va">True</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+-----------+
 ## | Chromosome   |     Start |       End | Name       |     Score | Strand       |   Cluster |
 ## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |   (int32) |
@@ -216,7 +224,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## +--------------+-----------+-----------+------------+-----------+--------------+-----------+
 ## Stranded PyRanges object has 3 rows and 7 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb143"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb143-1" data-line-number="1"><span class="bu">print</span>(f1.cluster(slack<span class="op">=</span><span class="dv">2</span>, strand<span class="op">=</span><span class="va">True</span>, count<span class="op">=</span><span class="va">True</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb140-1"><a href="methods-for-manipulating-single-pyranges.html#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f1.cluster(slack<span class="op">=</span><span class="dv">2</span>, strand<span class="op">=</span><span class="va">True</span>, count<span class="op">=</span><span class="va">True</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+-----------+-----------+
 ## | Chromosome   |     Start |       End | Name       |     Score | Strand       |   Cluster |     Count |
 ## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |   (int32) |   (int64) |
@@ -232,48 +240,48 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 which are not directly overlapping. If you set slack to -1 you avoid merging bookended features.
 To only merge features overlapping by at least X, set slack to -X.</p>
 <p>To cluster or merge only those rows which have the same values for a certain column, you can use the argument by to cluster and merge.</p>
-<div class="sourceCode" id="cb145"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb145-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb145-2" data-line-number="2">gr <span class="op">=</span> pr.data.ensembl_gtf()</a>
-<a class="sourceLine" id="cb145-3" data-line-number="3"><span class="bu">print</span>(gr)</a></code></pre></div>
-<pre><code>## +--------------+------------+--------------+-----------+-----------+------------+--------------+------------+------------------------------------+-------+
-## | Chromosome   | Source     | Feature      | Start     | End       | Score      | Strand       | Frame      | gene_biotype                       | +19   |
-## | (category)   | (object)   | (category)   | (int32)   | (int32)   | (object)   | (category)   | (object)   | (object)                           | ...   |
-## |--------------+------------+--------------+-----------+-----------+------------+--------------+------------+------------------------------------+-------|
-## | 1            | havana     | gene         | 11868     | 14409     | .          | +            | .          | transcribed_unprocessed_pseudogene | ...   |
-## | 1            | havana     | transcript   | 11868     | 14409     | .          | +            | .          | transcribed_unprocessed_pseudogene | ...   |
-## | 1            | havana     | exon         | 11868     | 12227     | .          | +            | .          | transcribed_unprocessed_pseudogene | ...   |
-## | 1            | havana     | exon         | 12612     | 12721     | .          | +            | .          | transcribed_unprocessed_pseudogene | ...   |
-## | ...          | ...        | ...          | ...       | ...       | ...        | ...          | ...        | ...                                | ...   |
-## | 1            | havana     | gene         | 1173055   | 1179555   | .          | -            | .          | lncRNA                             | ...   |
-## | 1            | havana     | transcript   | 1173055   | 1179555   | .          | -            | .          | lncRNA                             | ...   |
-## | 1            | havana     | exon         | 1179364   | 1179555   | .          | -            | .          | lncRNA                             | ...   |
-## | 1            | havana     | exon         | 1173055   | 1176396   | .          | -            | .          | lncRNA                             | ...   |
-## +--------------+------------+--------------+-----------+-----------+------------+--------------+------------+------------------------------------+-------+
+<div class="sourceCode" id="cb142"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb142-1"><a href="methods-for-manipulating-single-pyranges.html#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb142-2"><a href="methods-for-manipulating-single-pyranges.html#cb142-2" aria-hidden="true" tabindex="-1"></a>gr <span class="op">=</span> pr.data.ensembl_gtf()</span>
+<span id="cb142-3"><a href="methods-for-manipulating-single-pyranges.html#cb142-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr)</span></code></pre></div>
+<pre><code>## +--------------+------------+--------------+-----------+-----------+------------+--------------+------------+------------------------------------+-----------------+-------------+-------+
+## | Chromosome   | Source     | Feature      | Start     | End       | Score      | Strand       | Frame      | gene_biotype                       | gene_id         | gene_name   | +17   |
+## | (category)   | (object)   | (category)   | (int32)   | (int32)   | (object)   | (category)   | (object)   | (object)                           | (object)        | (object)    | ...   |
+## |--------------+------------+--------------+-----------+-----------+------------+--------------+------------+------------------------------------+-----------------+-------------+-------|
+## | 1            | havana     | gene         | 11868     | 14409     | .          | +            | .          | transcribed_unprocessed_pseudogene | ENSG00000223972 | DDX11L1     | ...   |
+## | 1            | havana     | transcript   | 11868     | 14409     | .          | +            | .          | transcribed_unprocessed_pseudogene | ENSG00000223972 | DDX11L1     | ...   |
+## | 1            | havana     | exon         | 11868     | 12227     | .          | +            | .          | transcribed_unprocessed_pseudogene | ENSG00000223972 | DDX11L1     | ...   |
+## | 1            | havana     | exon         | 12612     | 12721     | .          | +            | .          | transcribed_unprocessed_pseudogene | ENSG00000223972 | DDX11L1     | ...   |
+## | ...          | ...        | ...          | ...       | ...       | ...        | ...          | ...        | ...                                | ...             | ...         | ...   |
+## | 1            | havana     | gene         | 1173055   | 1179555   | .          | -            | .          | lncRNA                             | ENSG00000205231 | TTLL10-AS1  | ...   |
+## | 1            | havana     | transcript   | 1173055   | 1179555   | .          | -            | .          | lncRNA                             | ENSG00000205231 | TTLL10-AS1  | ...   |
+## | 1            | havana     | exon         | 1179364   | 1179555   | .          | -            | .          | lncRNA                             | ENSG00000205231 | TTLL10-AS1  | ...   |
+## | 1            | havana     | exon         | 1173055   | 1176396   | .          | -            | .          | lncRNA                             | ENSG00000205231 | TTLL10-AS1  | ...   |
+## +--------------+------------+--------------+-----------+-----------+------------+--------------+------------+------------------------------------+-----------------+-------------+-------+
 ## Stranded PyRanges object has 2,446 rows and 28 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.
-## 19 hidden columns: gene_id, gene_name, gene_source, gene_version, tag, transcript_biotype, transcript_id, transcript_name, transcript_source, transcript_support_level, ... (+ 9 more.)</code></pre>
-<div class="sourceCode" id="cb147"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb147-1" data-line-number="1"><span class="bu">print</span>(gr.cluster(by<span class="op">=</span><span class="st">&quot;gene_id&quot;</span>))</a></code></pre></div>
-<pre><code>## +--------------+----------------+----------------+-----------+-----------+------------+--------------+------------+----------------+-----------------+-------+
-## | Chromosome   | Source         | Feature        | Start     | End       | Score      | Strand       | Frame      | gene_biotype   | gene_id         | +19   |
-## | (category)   | (object)       | (category)     | (int32)   | (int32)   | (object)   | (category)   | (object)   | (object)       | (object)        | ...   |
-## |--------------+----------------+----------------+-----------+-----------+------------+--------------+------------+----------------+-----------------+-------|
-## | 1            | ensembl_havana | gene           | 1173883   | 1197935   | .          | +            | .          | protein_coding | ENSG00000162571 | ...   |
-## | 1            | havana         | transcript     | 1173883   | 1175034   | .          | +            | .          | protein_coding | ENSG00000162571 | ...   |
-## | 1            | havana         | exon           | 1173883   | 1173926   | .          | +            | .          | protein_coding | ENSG00000162571 | ...   |
-## | 1            | havana         | five_prime_utr | 1173902   | 1173926   | .          | +            | .          | protein_coding | ENSG00000162571 | ...   |
-## | ...          | ...            | ...            | ...       | ...       | ...        | ...          | ...        | ...            | ...             | ...   |
-## | 1            | ensembl_havana | stop_codon     | 450739    | 450742    | .          | -            | 0          | protein_coding | ENSG00000284733 | ...   |
-## | 1            | ensembl_havana | CDS            | 450742    | 451678    | .          | -            | 0          | protein_coding | ENSG00000284733 | ...   |
-## | 1            | ensembl_havana | start_codon    | 451675    | 451678    | .          | -            | 0          | protein_coding | ENSG00000284733 | ...   |
-## | 1            | ensembl_havana | five_prime_utr | 451678    | 451697    | .          | -            | .          | protein_coding | ENSG00000284733 | ...   |
-## +--------------+----------------+----------------+-----------+-----------+------------+--------------+------------+----------------+-----------------+-------+
+## 17 hidden columns: gene_source, gene_version, tag, transcript_biotype, transcript_id, transcript_name, transcript_source, transcript_support_level, transcript_version, exon_id, exon_number, ... (+ 6 more.)</code></pre>
+<div class="sourceCode" id="cb144"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb144-1"><a href="methods-for-manipulating-single-pyranges.html#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gr.cluster(by<span class="op">=</span><span class="st">&quot;gene_id&quot;</span>))</span></code></pre></div>
+<pre><code>## +--------------+----------------+----------------+-----------+-----------+------------+--------------+------------+----------------+-----------------+-------------+----------------+-------+
+## | Chromosome   | Source         | Feature        | Start     | End       | Score      | Strand       | Frame      | gene_biotype   | gene_id         | gene_name   | gene_source    | +17   |
+## | (category)   | (object)       | (category)     | (int32)   | (int32)   | (object)   | (category)   | (object)   | (object)       | (object)        | (object)    | (object)       | ...   |
+## |--------------+----------------+----------------+-----------+-----------+------------+--------------+------------+----------------+-----------------+-------------+----------------+-------|
+## | 1            | ensembl_havana | gene           | 1173883   | 1197935   | .          | +            | .          | protein_coding | ENSG00000162571 | TTLL10      | ensembl_havana | ...   |
+## | 1            | havana         | transcript     | 1173883   | 1175034   | .          | +            | .          | protein_coding | ENSG00000162571 | TTLL10      | ensembl_havana | ...   |
+## | 1            | havana         | exon           | 1173883   | 1173926   | .          | +            | .          | protein_coding | ENSG00000162571 | TTLL10      | ensembl_havana | ...   |
+## | 1            | havana         | transcript     | 1173902   | 1197935   | .          | +            | .          | protein_coding | ENSG00000162571 | TTLL10      | ensembl_havana | ...   |
+## | ...          | ...            | ...            | ...       | ...       | ...        | ...          | ...        | ...            | ...             | ...         | ...            | ...   |
+## | 1            | ensembl_havana | stop_codon     | 450739    | 450742    | .          | -            | 0          | protein_coding | ENSG00000284733 | OR4F29      | ensembl_havana | ...   |
+## | 1            | ensembl_havana | CDS            | 450742    | 451678    | .          | -            | 0          | protein_coding | ENSG00000284733 | OR4F29      | ensembl_havana | ...   |
+## | 1            | ensembl_havana | start_codon    | 451675    | 451678    | .          | -            | 0          | protein_coding | ENSG00000284733 | OR4F29      | ensembl_havana | ...   |
+## | 1            | ensembl_havana | five_prime_utr | 451678    | 451697    | .          | -            | .          | protein_coding | ENSG00000284733 | OR4F29      | ensembl_havana | ...   |
+## +--------------+----------------+----------------+-----------+-----------+------------+--------------+------------+----------------+-----------------+-------------+----------------+-------+
 ## Stranded PyRanges object has 2,446 rows and 29 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.
-## 19 hidden columns: gene_name, gene_source, gene_version, tag, transcript_biotype, transcript_id, transcript_name, transcript_source, transcript_support_level, transcript_version, ... (+ 9 more.)</code></pre>
+## 17 hidden columns: gene_version, tag, transcript_biotype, transcript_id, transcript_name, transcript_source, transcript_support_level, transcript_version, exon_id, exon_number, exon_version, (assigned, ... (+ 5 more.)</code></pre>
 <p>If you want to split a pyrange on the overlapping intervals, you can use split:</p>
-<div class="sourceCode" id="cb149"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb149-1" data-line-number="1"><span class="im">import</span> pyranges <span class="im">as</span> pr</a>
-<a class="sourceLine" id="cb149-2" data-line-number="2">f1 <span class="op">=</span> pr.data.f1()</a>
-<a class="sourceLine" id="cb149-3" data-line-number="3"><span class="bu">print</span>(f1)</a></code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb146-1"><a href="methods-for-manipulating-single-pyranges.html#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyranges <span class="im">as</span> pr</span>
+<span id="cb146-2"><a href="methods-for-manipulating-single-pyranges.html#cb146-2" aria-hidden="true" tabindex="-1"></a>f1 <span class="op">=</span> pr.data.f1()</span>
+<span id="cb146-3"><a href="methods-for-manipulating-single-pyranges.html#cb146-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f1)</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+
 ## | Chromosome   |     Start |       End | Name       |     Score | Strand       |
 ## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |
@@ -284,67 +292,160 @@ To only merge features overlapping by at least X, set slack to -X.</p>
 ## +--------------+-----------+-----------+------------+-----------+--------------+
 ## Stranded PyRanges object has 3 rows and 6 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb151"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb151-1" data-line-number="1"><span class="bu">print</span>(f1.split())</a></code></pre></div>
+<div class="sourceCode" id="cb148"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb148-1"><a href="methods-for-manipulating-single-pyranges.html#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f1.split())</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+
 ## | Chromosome   |     Start |       End | Strand     |
 ## | (object)     |   (int32) |   (int32) | (object)   |
 ## |--------------+-----------+-----------+------------|
 ## | chr1         |         3 |         6 | +          |
-## | chr1         |         6 |         8 | +          |
 ## | chr1         |         8 |         9 | +          |
 ## | chr1         |         5 |         7 | -          |
 ## +--------------+-----------+-----------+------------+
-## Stranded PyRanges object has 4 rows and 4 columns from 1 chromosomes.
+## Stranded PyRanges object has 3 rows and 4 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p><code>five_end</code> finds the starts of the regions (taking direction of transcription
 into account).</p>
-<div class="sourceCode" id="cb153"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb153-1" data-line-number="1">f1.five_end()</a></code></pre></div>
+<div class="sourceCode" id="cb150"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb150-1"><a href="methods-for-manipulating-single-pyranges.html#cb150-1" aria-hidden="true" tabindex="-1"></a>f1.five_end()</span></code></pre></div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Chromosome</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Name</th>
+      <th>Score</th>
+      <th>Strand</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>chr1</td>
+      <td>3</td>
+      <td>4</td>
+      <td>interval1</td>
+      <td>0</td>
+      <td>+</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>chr1</td>
+      <td>8</td>
+      <td>9</td>
+      <td>interval3</td>
+      <td>0</td>
+      <td>+</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>chr1</td>
+      <td>6</td>
+      <td>7</td>
+      <td>interval2</td>
+      <td>0</td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="sourceCode" id="cb151"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb151-1"><a href="methods-for-manipulating-single-pyranges.html#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f1.five_end())</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+
 ## | Chromosome   |     Start |       End | Name       |     Score | Strand       |
 ## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |
 ## |--------------+-----------+-----------+------------+-----------+--------------|
 ## | chr1         |         3 |         4 | interval1  |         0 | +            |
 ## | chr1         |         8 |         9 | interval3  |         0 | +            |
-## | chr1         |         7 |         8 | interval2  |         0 | -            |
-## +--------------+-----------+-----------+------------+-----------+--------------+
-## Stranded PyRanges object has 3 rows and 6 columns from 1 chromosomes.
-## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb155"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb155-1" data-line-number="1"><span class="bu">print</span>(f1.five_end(slack<span class="op">=</span><span class="dv">5</span>))</a></code></pre></div>
-<pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+
-## | Chromosome   |     Start |       End | Name       |     Score | Strand       |
-## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |
-## |--------------+-----------+-----------+------------+-----------+--------------|
-## | chr1         |         0 |         9 | interval1  |         0 | +            |
-## | chr1         |         3 |        14 | interval3  |         0 | +            |
-## | chr1         |         2 |        13 | interval2  |         0 | -            |
+## | chr1         |         6 |         7 | interval2  |         0 | -            |
 ## +--------------+-----------+-----------+------------+-----------+--------------+
 ## Stranded PyRanges object has 3 rows and 6 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p><code>three_end</code> finds the ends of the regions (taking direction of transcription into account).</p>
-<div class="sourceCode" id="cb157"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb157-1" data-line-number="1">f1.three_end()</a></code></pre></div>
+<div class="sourceCode" id="cb153"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb153-1"><a href="methods-for-manipulating-single-pyranges.html#cb153-1" aria-hidden="true" tabindex="-1"></a>f1.three_end()</span></code></pre></div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Chromosome</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Name</th>
+      <th>Score</th>
+      <th>Strand</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>chr1</td>
+      <td>5</td>
+      <td>6</td>
+      <td>interval1</td>
+      <td>0</td>
+      <td>+</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>chr1</td>
+      <td>8</td>
+      <td>9</td>
+      <td>interval3</td>
+      <td>0</td>
+      <td>+</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>chr1</td>
+      <td>5</td>
+      <td>6</td>
+      <td>interval2</td>
+      <td>0</td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="sourceCode" id="cb154"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb154-1"><a href="methods-for-manipulating-single-pyranges.html#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f1.three_end())</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+
 ## | Chromosome   |     Start |       End | Name       |     Score | Strand       |
 ## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |
 ## |--------------+-----------+-----------+------------+-----------+--------------|
-## | chr1         |         6 |         7 | interval1  |         0 | +            |
-## | chr1         |         9 |        10 | interval3  |         0 | +            |
-## | chr1         |         7 |         8 | interval2  |         0 | -            |
+## | chr1         |         5 |         6 | interval1  |         0 | +            |
+## | chr1         |         8 |         9 | interval3  |         0 | +            |
+## | chr1         |         5 |         6 | interval2  |         0 | -            |
 ## +--------------+-----------+-----------+------------+-----------+--------------+
 ## Stranded PyRanges object has 3 rows and 6 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb159"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb159-1" data-line-number="1"><span class="bu">print</span>(f1.three_end(slack<span class="op">=</span><span class="dv">5</span>))</a></code></pre></div>
-<pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+
-## | Chromosome   |     Start |       End | Name       |     Score | Strand       |
-## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |
-## |--------------+-----------+-----------+------------+-----------+--------------|
-## | chr1         |         1 |        12 | interval1  |         0 | +            |
-## | chr1         |         4 |        15 | interval3  |         0 | +            |
-## | chr1         |         2 |        13 | interval2  |         0 | -            |
-## +--------------+-----------+-----------+------------+-----------+--------------+
-## Stranded PyRanges object has 3 rows and 6 columns from 1 chromosomes.
-## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<p><code>slack</code> extends the starts and ends of your interval.</p>
-<div class="sourceCode" id="cb161"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb161-1" data-line-number="1"><span class="bu">print</span>(f1.slack(<span class="dv">5</span>))</a></code></pre></div>
+<p><code>extend</code> (also aliased <code>slack</code>) extends the starts and ends of your interval:</p>
+<div class="sourceCode" id="cb156"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb156-1"><a href="methods-for-manipulating-single-pyranges.html#cb156-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f1.slack(<span class="dv">5</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+
 ## | Chromosome   |     Start |       End | Name       |     Score | Strand       |
 ## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |
@@ -355,7 +456,7 @@ into account).</p>
 ## +--------------+-----------+-----------+------------+-----------+--------------+
 ## Stranded PyRanges object has 3 rows and 6 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb163"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb163-1" data-line-number="1"><span class="bu">print</span>(f1.slack({<span class="st">&quot;5&quot;</span>: <span class="dv">2</span>, <span class="st">&quot;3&quot;</span>: <span class="dv">-1</span>}))</a></code></pre></div>
+<div class="sourceCode" id="cb158"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb158-1"><a href="methods-for-manipulating-single-pyranges.html#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f1.slack({<span class="st">&quot;5&quot;</span>: <span class="dv">2</span>, <span class="st">&quot;3&quot;</span>: <span class="op">-</span><span class="dv">1</span>}))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+------------+-----------+--------------+
 ## | Chromosome   |     Start |       End | Name       |     Score | Strand       |
 ## | (category)   |   (int32) |   (int32) | (object)   |   (int64) | (category)   |
@@ -367,8 +468,8 @@ into account).</p>
 ## Stranded PyRanges object has 3 rows and 6 columns from 1 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p><code>window</code> splits your data into windows:</p>
-<div class="sourceCode" id="cb165"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb165-1" data-line-number="1">exons <span class="op">=</span> pr.data.exons()</a>
-<a class="sourceLine" id="cb165-2" data-line-number="2"><span class="bu">print</span>(exons)</a></code></pre></div>
+<div class="sourceCode" id="cb160"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb160-1"><a href="methods-for-manipulating-single-pyranges.html#cb160-1" aria-hidden="true" tabindex="-1"></a>exons <span class="op">=</span> pr.data.exons()</span>
+<span id="cb160-2"><a href="methods-for-manipulating-single-pyranges.html#cb160-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(exons)</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+----------------------------------------+-----------+--------------+
 ## | Chromosome   | Start     | End       | Name                                   | Score     | Strand       |
 ## | (category)   | (int32)   | (int32)   | (object)                               | (int64)   | (category)   |
@@ -385,7 +486,7 @@ into account).</p>
 ## +--------------+-----------+-----------+----------------------------------------+-----------+--------------+
 ## Stranded PyRanges object has 1,000 rows and 6 columns from 2 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb167"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb167-1" data-line-number="1"><span class="bu">print</span>(exons.window(<span class="dv">5</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb162-1"><a href="methods-for-manipulating-single-pyranges.html#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(exons.window(<span class="dv">5</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+----------------------------------------+-----------+--------------+
 ## | Chromosome   | Start     | End       | Name                                   | Score     | Strand       |
 ## | (category)   | (int32)   | (int32)   | (object)                               | (int64)   | (category)   |
@@ -395,17 +496,17 @@ into account).</p>
 ## | chrX         | 135721711 | 135721716 | NR_038462_exon_0_0_chrX_135721702_f    | 0         | +            |
 ## | chrX         | 135721716 | 135721721 | NR_038462_exon_0_0_chrX_135721702_f    | 0         | +            |
 ## | ...          | ...       | ...       | ...                                    | ...       | ...          |
-## | chrY         | 15467254  | 15467259  | NM_001258270_exon_13_0_chrY_15467255_r | 0         | -            |
 ## | chrY         | 15467259  | 15467264  | NM_001258270_exon_13_0_chrY_15467255_r | 0         | -            |
 ## | chrY         | 15467264  | 15467269  | NM_001258270_exon_13_0_chrY_15467255_r | 0         | -            |
 ## | chrY         | 15467269  | 15467274  | NM_001258270_exon_13_0_chrY_15467255_r | 0         | -            |
+## | chrY         | 15467274  | 15467278  | NM_001258270_exon_13_0_chrY_15467255_r | 0         | -            |
 ## +--------------+-----------+-----------+----------------------------------------+-----------+--------------+
-## Stranded PyRanges object has 60,449 rows and 6 columns from 2 chromosomes.
+## Stranded PyRanges object has 61,268 rows and 6 columns from 2 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
 <p>If you want to all windows to start at a multiple of window_size, use the tile function:</p>
 <p>You can use the overlap flag to see how many basepairs each tile overlapped with
 the underlying interval.</p>
-<div class="sourceCode" id="cb169"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb169-1" data-line-number="1"><span class="bu">print</span>(exons.tile(<span class="dv">5</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb164"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb164-1"><a href="methods-for-manipulating-single-pyranges.html#cb164-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(exons.tile(<span class="dv">5</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+----------------------------------------+-----------+--------------+
 ## | Chromosome   | Start     | End       | Name                                   | Score     | Strand       |
 ## | (category)   | (int32)   | (int32)   | (object)                               | (int64)   | (category)   |
@@ -422,7 +523,7 @@ the underlying interval.</p>
 ## +--------------+-----------+-----------+----------------------------------------+-----------+--------------+
 ## Stranded PyRanges object has 61,643 rows and 6 columns from 2 chromosomes.
 ## For printing, the PyRanges was sorted on Chromosome and Strand.</code></pre>
-<div class="sourceCode" id="cb171"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb171-1" data-line-number="1"><span class="bu">print</span>(exons.tile(<span class="dv">5</span>, overlap<span class="op">=</span><span class="va">True</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb166"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb166-1"><a href="methods-for-manipulating-single-pyranges.html#cb166-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(exons.tile(<span class="dv">5</span>, overlap<span class="op">=</span><span class="va">True</span>))</span></code></pre></div>
 <pre><code>## +--------------+-----------+-----------+----------------------------------------+-----------+--------------+---------------+
 ## | Chromosome   | Start     | End       | Name                                   | Score     | Strand       | TileOverlap   |
 ## | (category)   | (int32)   | (int32)   | (object)                               | (int64)   | (category)   | (int32)       |
@@ -451,12 +552,13 @@ the underlying interval.</p>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -464,12 +566,12 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -484,7 +586,15 @@ gitbook.start({
 "link": null,
 "text": null
 },
+"view": {
+"link": null,
+"text": null
+},
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

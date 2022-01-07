@@ -36,7 +36,7 @@ vector.
 import pyranges as pr
 gr = pr.data.chipseq()
 gr2 = pr.data.chipseq_background()
-gr.k_nearest(gr2, suffix="_Input", ks=[1, 2] * 5000).print()
+gr.k_nearest(gr2, suffix="_Input", k=[1, 2] * 5000).print()
 ```
 
 Note that nearest intervals that are upstream of the query interval have a

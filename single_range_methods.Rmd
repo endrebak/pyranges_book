@@ -51,17 +51,17 @@ into account).
 
 ```{python tidy=FALSE}
 f1.five_end()
-print(f1.five_end(slack=5))
+print(f1.five_end())
 ```
 
 `three_end` finds the ends of the regions (taking direction of transcription into account).
 
 ```{python tidy=FALSE}
 f1.three_end()
-print(f1.three_end(slack=5))
+print(f1.three_end())
 ```
 
-`slack` extends the starts and ends of your interval.
+`extend` (also aliased `slack`) extends the starts and ends of your interval:
 
 ```{python tidy=FALSE}
 print(f1.slack(5))

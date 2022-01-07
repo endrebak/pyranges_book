@@ -57,7 +57,7 @@ print(new_gr)
 Note that this is basically the same as using the apply method of the PyRange,
 only that the for loops are never multithreaded.
 
-To iterate over multiple pyranges you can use pr.itergrs or pr.iter. It iterates
+To iterate over multiple pyranges you can use pr.itergrs. It iterates
 over multiple pyranges at the same time, returning the dfs belonging to the same
 Chromosome or Chromosome/Strand at each iteration. Missing entries in one or
 more PyRanges returns empty dfs.
@@ -67,7 +67,7 @@ import pyranges as pr
 
 l = pr.random(25), pr.random(25), pr.random(25)
 
-for key, grs in pr.iter(l, keys=True, strand=True):
+for key, grs in pr.itergrs(l, keys=True, strand=True):
     print(key)
     print(grs)
 ```

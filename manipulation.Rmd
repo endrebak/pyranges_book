@@ -29,12 +29,13 @@ print(gr)
 And as you can see, you can drop columns from the PyRanges using drop. Using
 drop by itself removes all metadata-columns.
 
-To insert a dataframe into a PyRanges object, you can use the + operator:
+To insert a dataframe into a PyRanges object, you can use insert. Insert supports an optional insertion index loc:
 
 ```{python tidy=FALSE}
 df = pd.DataFrame({"A1": [1, 2] * 5000, "A2": [3, 4, 5, 6] * 2500})
 print(df.head())
-print(gr + df)
+print(gr.insert(df))
+print(gr.insert(df, loc=3))
 ```
 
 To rename the columns you can use the set_columns() method.

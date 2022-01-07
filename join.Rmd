@@ -30,22 +30,17 @@ print(f1.join(f2, how="outer"))
 ```
 
 After joining, you can use the method new_position() to find the union or
-intersection of the joined ranges. The default suffixes are `["_a", "_b"]`, but
-a suffixes argument overrides this.
-
-Positions with the second suffix should exist in the PyRanges already. The first
-suffix is used to rename the old Starts and Ends so they are kept.
+intersection of the joined ranges. By default it uses the two first columns containing "Start" and the two first containing "End".
+Otherwise, the columns to be used can be given by the columns argument. 
 
 ```{python tidy=FALSE}
 print(f2.join(f1).new_position("intersection"))
+# same as:
+print(f2.join(f1).new_position("intersection", columns=["Start", "End", "Start_b", "End_b"]))
 ```
 
 If you want to swap which columns are considered the Start and End, you can use
 the swap argument.
-
-In this case, the suffixes should be the suffixes of the columns you want to
-swap. So if the columns are named "Start", "End", "Start_b" and "End_b", you
-should give the suffixes ["", "_b"]
 
 ```{python tidy=FALSE}
 gr1, gr2 = pr.data.chipseq(), pr.data.chipseq_background()
@@ -53,6 +48,5 @@ j = gr1.join(gr2)
 print(j)
 j2 = j.new_position("intersection")
 print(j2)
-print(j2.new_position("swap", suffixes=["", "_b"]))
-print(j2.new_position("swap", suffixes=["_a", "_b"]))
+print(j2.new_position("swap"))
 ```
